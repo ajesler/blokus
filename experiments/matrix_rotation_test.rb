@@ -11,7 +11,7 @@ class Matrix
 end
 
 class Paper
-	SHAPE_CHAR = "\u2B1B"
+	SHAPE_CHAR = "\u25FC"
 	SHAPE_ORIGIN_CHAR = "\u25A3"
 	ORIGIN_CHAR = "\u25A2"
 	DEFAULT_DIMENSION = 11
@@ -35,11 +35,11 @@ class Paper
 		x_origin = (@width / 2)
 		y_origin = (@height / 2)
 
-		# assumes the input matix is 2xn.
+		# assumes the input matix is 2xN
 		@matrix.column_count.times do |index|
 			col = @matrix.column(index)
 			x, y = col[0], col[1]
-			@paper[@height-y_origin-y-1, x_origin+x] = SHAPE_CHAR
+			@paper[y_origin+y, x_origin+x] = SHAPE_CHAR
 		end
 
 		# set the origin marker
@@ -68,7 +68,7 @@ reflect_on_y_axis = Matrix[ [-1, 0], [0, 1] ]
 reflect_on_x_axis = Matrix[ [1, 0], [0, -1] ]
 
 shape = Matrix[ [0, 0, 1, 1], [0, 1, 1, 2] ]
-# shape = Matrix[ [0, 1, 1, 2, 2], [0, 0, 1, 1, 2] ]
+shape = Matrix[ [0, 1, 1, 2, 2], [0, 0, 1, 1, 2] ]
 
 Paper.new(shape, "Initial shape").plot
 plot_rotation(rotate_180, shape, "Rotate 180 degrees")

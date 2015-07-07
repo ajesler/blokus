@@ -63,6 +63,8 @@ Web socket impl on backend so that no refresh required when its your turn.
 
 ### Implementation Notes
 
+Aim is to implement without any external JS libraries.  
+
 Matrix transforms could be handy for rotating / flipping blocks. See `experiments/matrix_rotation_test.rb`  
 
 SVG for rendering the board from a JSON blob?  
