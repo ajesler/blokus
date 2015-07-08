@@ -1,12 +1,25 @@
+require 'pry'
 require 'matrix'
-
-def print_matrix(matrix)
-	puts matrix.to_a.map(&:inspect)
-end
 
 class Matrix
   def []=(i, j, x)
     @rows[i][j] = x
+  end
+
+  def same(matrix)
+  	self.coordinate_sort == matrix.coordinate_sort
+  end
+
+  def coordinate_sort
+  	result = []
+
+  	column_count.times do |index|
+			col = column(index)
+			x, y = col[0], col[1]
+			result << [x, y]
+		end
+
+  	result.sort
   end
 end
 
@@ -55,24 +68,155 @@ class Paper
 	end
 end
 
-def plot_rotation(rotation, points, title)
-	result = rotation * points
-
-	Paper.new(result, title).plot
+class BlockDefinition < Struct.new(:name, :matrix)
+	def dimensions
+		r, c = matrix.row_count, matrix.column_count
+		return r, c
+	end
 end
 
-rotate_90_clockwise = Matrix[ [0, 1], [-1, 0] ]
-rotate_90_anticlockwise = Matrix[ [0, -1], [1, 0 ] ]
-rotate_180 = Matrix[ [-1, 0], [0, -1] ]
-reflect_on_y_axis = Matrix[ [-1, 0], [0, 1] ]
-reflect_on_x_axis = Matrix[ [1, 0], [0, -1] ]
+Transform = BlockDefinition
+UserShape = BlockDefinition
 
-shape = Matrix[ [0, 0, 1, 1], [0, 1, 1, 2] ]
-shape = Matrix[ [0, 1, 1, 2, 2], [0, 0, 1, 1, 2] ]
+def plot_transformed_block(transform, block)
+	result = transform.matrix * block.matrix
+	Paper.new(result, "#{transform.name} #{block.name}").plot
+end
 
-Paper.new(shape, "Initial shape").plot
-plot_rotation(rotate_180, shape, "Rotate 180 degrees")
-plot_rotation(rotate_90_clockwise, shape, "Rotate 90 degrees clockwise")
-plot_rotation(rotate_90_anticlockwise, shape, "Rotate 90 degrees anticlockwise")
-plot_rotation(reflect_on_x_axis, shape, "reflect on x axis")
-plot_rotation(reflect_on_y_axis, shape, "reflect on y axis")
+TRANSFORMS = {
+	:rot_90_c => Transform.new("rotate 90 clockwise", Matrix[[0, 1], [-1, 0]]),
+	:rot_90_ac => Transform.new("rotate 90 anticlockwise", Matrix[[0, -1], [1, 0]]),
+	:rot_180 => Transform.new("rotate 180", Matrix[[-1, 0], [0, -1]]),
+	:reflect_x => Transform.new("reflect on x axis", Matrix[[1, 0], [0, -1]]),
+	:reflect_y => Transform.new("reflect on y axis", Matrix[[-1, 0], [0, 1]]),
+	:identity => Transform.new("identity", Matrix[[1,0],[0, 1]])
+	# add reflect over y = x and inverse
+}
+
+BLOCKS = {
+	:four_z => BlockDefinition.new("four_z", Matrix[[0, 0, 1, 1], [0, 1, 1, 2]]),
+	:five_z => BlockDefinition.new("five_z", Matrix[[0, 1, 1, 1, 2], [0, 0, 1, 2, 2]]),
+	:unbalanced_z => BlockDefinition.new("unbalanced_z", Matrix[[0, 0, 1, 1, 1], [0, 1, 1, 2, 3]]),
+	:space_ship => BlockDefinition.new("space_ship", Matrix[[0, 1, 1, 2, 2], [0, 0, 1, 1, 2]]),
+	:cross => BlockDefinition.new("cross", Matrix[[0, 1, 1, 2, 1], [1, 0, 1, 1, 2]]),
+	:large_square => BlockDefinition.new("large square", Matrix[[0, 0, 1, 1],[0, 1, 1, 0]]),
+	:small_square => BlockDefinition.new("small square", Matrix[[0],[0]]),
+	:two_line => BlockDefinition.new("two line", Matrix[[0, 0],[0, 1]]),
+	:three_line => BlockDefinition.new("three line", Matrix[[0, 0, 0],[0, 1, 2]]),
+	:four_line => BlockDefinition.new("four line", Matrix[[0, 0, 0, 0],[0, 1, 2, 3]]),
+	:five_line => BlockDefinition.new("five line", Matrix[[0, 0, 0, 0, 0],[0, 1, 2, 3, 4]]),
+	:large_corner => BlockDefinition.new("large corner", Matrix[[0, 0, 0, 1, 2],[0, 1, 2, 2, 2]]),
+	:small_corner => BlockDefinition.new("small corner", Matrix[[0, 0, 1],[0, 1, 1]]),
+	:large_l => BlockDefinition.new("large l", Matrix[[0, 1, 0, 0, 0],[0, 0, 1, 2, 3]]),
+	:small_l => BlockDefinition.new("small l", Matrix[[0, 1, 0, 0],[0, 0, 1, 2]]),
+	:ewe => BlockDefinition.new("ewe", Matrix[[0, 1, 2, 0, 2],[0, 0, 0, 1, 1]]),
+	:short_t => BlockDefinition.new("short t", Matrix[[1, 0, 1, 2],[0, 1, 1, 1]]),
+	:long_t => BlockDefinition.new("long t", Matrix[[1, 1, 0, 1, 2],[0, 1, 2, 2, 2]]),
+	:stylish => BlockDefinition.new("stylish", Matrix[[1, 1, 2, 0, 1],[0, 1, 1, 2, 2]]),
+	:conjoined_squares => BlockDefinition.new("conjoined squares", Matrix[[0, 1, 0, 1, 0],[0, 0, 1, 1, 2]]),
+	:line_with_growth => BlockDefinition.new("line with growth", Matrix[[0, 0, 0, 1, 0],[0, 1, 2, 2, 3]])
+}
+
+# BLOCKS.values.each { |block| Paper.new(block.matrix, block.name).plot }
+
+def map_matrix_to_origin(matrix)
+	x_row = matrix.row(0).to_a
+	y_row = matrix.row(1).to_a
+	min_x = x_row.min
+	min_y = y_row.min
+
+	new_matrix = matrix.dup
+
+	matrix.column_count.times do |index|
+		col = matrix.column(index)
+		x, y = col[0], col[1]
+		
+		new_matrix[0, index] = x - min_x
+		new_matrix[1, index] = y - min_y
+	end
+
+	new_matrix
+end
+
+def same_dimensions?(shape_definition, unknown_shape)
+	shape_definition.dimensions == unknown_shape.dimensions
+end
+
+def are_same_shape?(shape_definition, unknown_shape)
+	return false unless same_dimensions?(shape_definition, unknown_shape)
+
+	t = [
+		TRANSFORMS[:identity],
+		TRANSFORMS[:reflect_x],
+		TRANSFORMS[:reflect_y],
+		TRANSFORMS[:rot_180],
+		TRANSFORMS[:rot_90_ac],
+		TRANSFORMS[:rot_90_c],
+		Transform.new("reflect x then rot 90 c", TRANSFORMS[:reflect_x].matrix*TRANSFORMS[:rot_90_c].matrix),
+		Transform.new("reflect y then rot 90 c", TRANSFORMS[:reflect_y].matrix*TRANSFORMS[:rot_90_c].matrix)
+	]
+
+	t.length.times do |index|
+		unknown_shape_at_origin = map_matrix_to_origin(unknown_shape.matrix)
+		transformed_shape = map_matrix_to_origin(t[index].matrix*shape_definition.matrix)
+		return true if unknown_shape_at_origin.same(transformed_shape)
+	end
+
+	return false
+end
+
+def find_shape_name(unknown_shape)
+	BLOCKS.each do |name, block|
+		if are_same_shape?(block, unknown_shape)
+			return name.to_s
+		end
+	end
+
+	return "not a known block shape"
+end
+
+# plot_transformed_block(TRANSFORMS[:identity], BLOCKS[:small_corner])
+# plot_transformed_block(TRANSFORMS[:reflect_x], BLOCKS[:small_corner])
+
+# result = TRANSFORMS[:reflect_x].matrix * BLOCKS[:small_corner].matrix
+# result = map_matrix_to_origin(result)
+# Paper.new(result, "moved to origin").plot
+
+line = BLOCKS[:five_line]
+moved_line = UserShape.new("five line moved", Matrix[[4, 4, 4, 4, 4],[7, 8, 9, 10, 11]])
+
+shapes_match = are_same_shape?(line, moved_line)
+puts "Recognises transformed shape: #{shapes_match}"
+
+unknown_shape = UserShape.new("unknown", Matrix[[9, 8, 9, 10, 8],[8, 9, 9, 9, 10]])
+shape_name = find_shape_name(unknown_shape)
+puts "Shape name of #{unknown_shape.name} is #{shape_name}"
+
+u_origin = map_matrix_to_origin(unknown_shape.matrix)
+transformed_block = map_matrix_to_origin(TRANSFORMS[:reflect_y].matrix*TRANSFORMS[:rot_90_c].matrix * BLOCKS[:stylish].matrix)
+
+title = "Unknown shape at origin"
+Paper.new(u_origin, title).plot
+puts u_origin
+
+title = "Transformed stylish"
+Paper.new(transformed_block, title).plot
+puts transformed_block
+
+# Paper.new(BLOCKS[:stylish].matrix, "stylish").plot
+
+# result = map_matrix_to_origin(moved_line.matrix)
+# puts "Origin of       #{moved_line.matrix}"
+# puts "Matrix mapping:\n\tExpect: #{line.matrix}\n\tActual: #{result}"
+
+# puts "-----------"
+
+# test_matrix_origin = Matrix[[0, 1, 0],[0, 0, 1]]
+# test_matrix = Matrix[[4, 5, 4], [3, 3, 4]]
+# puts "Origin of       #{test_matrix}"
+# result = map_matrix_to_origin(test_matrix)
+# puts "Matrix mapping:\n\tExpect: #{test_matrix_origin}\n\tActual: #{result}"
+
+
+
+

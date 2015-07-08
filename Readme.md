@@ -52,11 +52,11 @@ A player earns +15 points if all of their pieces have been placed on the board p
 - Block
 	- player
 	- turn_number
-	- shape
 	- positions_occupied
+	
+	- shape
 	- orientation
 	- need to be able to rotate around an origin and flip the shape
-
 
 Web socket impl on backend so that no refresh required when its your turn. 
 
@@ -70,6 +70,19 @@ Matrix transforms could be handy for rotating / flipping blocks. See `experiment
 SVG for rendering the board from a JSON blob?  
 
 An invalid placement should show feedback to the user before they make the placement. Eg change shading of a block if it is being held over an invalid 
+
+
+#### Block Positioning Validation
+
+Create a BlockDefinition for each of the 21 blocks.
+
+Validation Checks for blocks need to look at:
+- That the positions are not used. Can check this by finding all the positions that have been used on the board by blocks.
+- That the given positions match the shape defined in the BlockDefinition for the particular block type. Horizontal / vertical line checking is easy, doing complex shapes is harder. 8 possible forms for each block. Could create a shape centered on 0,0, then apply each transform to find a match. Some shapes have less than 8 forms, for example the cross only has one form.
+	- What are the options for doing this checking? Only doing one shape at a time, so 8 possibilities will be pretty fast to check.
+	- Find centroid of shape, offset to match definition, and check rotations?
+	- Store an origin point of each shape to validate, and use this as a starting point for checking rotations.
+	- Least squares fitting of two 3d point sets - http://162.105.204.96/teachers/yaoy/Fall2011/arun.pdf
 
 
 ### Extras
