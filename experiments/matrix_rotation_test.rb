@@ -73,6 +73,10 @@ class BlockDefinition < Struct.new(:name, :matrix)
 		r, c = matrix.row_count, matrix.column_count
 		return r, c
 	end
+
+	def size
+		matrix.column_count
+	end
 end
 
 Transform = BlockDefinition
@@ -89,8 +93,9 @@ TRANSFORMS = {
 	:rot_180 => Transform.new("rotate 180", Matrix[[-1, 0], [0, -1]]),
 	:reflect_x => Transform.new("reflect on x axis", Matrix[[1, 0], [0, -1]]),
 	:reflect_y => Transform.new("reflect on y axis", Matrix[[-1, 0], [0, 1]]),
-	:identity => Transform.new("identity", Matrix[[1,0],[0, 1]])
-	# add reflect over y = x and inverse
+	:identity => Transform.new("identity", Matrix[[1,0],[0, 1]]),
+	:reflect_y_x => Transform.new("reflect_y_x", Matrix[[0, 1], [1, 0]]),
+	:reflect_y_negative_x => Transform.new("reflect_y_negative_x", Matrix[[0, -1], [-1, 0]])
 }
 
 BLOCKS = {
@@ -152,8 +157,8 @@ def are_same_shape?(shape_definition, unknown_shape)
 		TRANSFORMS[:rot_180],
 		TRANSFORMS[:rot_90_ac],
 		TRANSFORMS[:rot_90_c],
-		Transform.new("reflect x then rot 90 c", TRANSFORMS[:reflect_x].matrix*TRANSFORMS[:rot_90_c].matrix),
-		Transform.new("reflect y then rot 90 c", TRANSFORMS[:reflect_y].matrix*TRANSFORMS[:rot_90_c].matrix)
+		TRANSFORMS[:reflect_y_x],
+		TRANSFORMS[:reflect_y_negative_x],
 	]
 
 	t.length.times do |index|
@@ -166,7 +171,8 @@ def are_same_shape?(shape_definition, unknown_shape)
 end
 
 def find_shape_name(unknown_shape)
-	BLOCKS.each do |name, block|
+	# no point checking shapes of a different size
+	BLOCKS.find_all { |name, block| block.size == unknown_shape.size }.each do |name, block|
 		if are_same_shape?(block, unknown_shape)
 			return name.to_s
 		end
@@ -183,7 +189,7 @@ end
 # Paper.new(result, "moved to origin").plot
 
 line = BLOCKS[:five_line]
-moved_line = UserShape.new("five line moved", Matrix[[4, 4, 4, 4, 4],[7, 8, 9, 10, 11]])
+moved_line = UserShape.new("five line moved", Matrix[[7, 8, 9, 10, 11],[4, 4, 4, 4, 4]])
 
 shapes_match = are_same_shape?(line, moved_line)
 puts "Recognises transformed shape: #{shapes_match}"
@@ -193,7 +199,10 @@ shape_name = find_shape_name(unknown_shape)
 puts "Shape name of #{unknown_shape.name} is #{shape_name}"
 
 u_origin = map_matrix_to_origin(unknown_shape.matrix)
-transformed_block = map_matrix_to_origin(TRANSFORMS[:reflect_y].matrix*TRANSFORMS[:rot_90_c].matrix * BLOCKS[:stylish].matrix)
+# transformed_block = map_matrix_to_origin(TRANSFORMS[:reflect_y].matrix*TRANSFORMS[:rot_90_c].matrix * BLOCKS[:stylish].matrix)
+transformed_block = map_matrix_to_origin(TRANSFORMS[:reflect_y_negative_x].matrix * BLOCKS[:stylish].matrix)
+
+Paper.new(BLOCKS[:stylish].matrix, "stylish").plot
 
 title = "Unknown shape at origin"
 Paper.new(u_origin, title).plot
@@ -203,20 +212,11 @@ title = "Transformed stylish"
 Paper.new(transformed_block, title).plot
 puts transformed_block
 
-# Paper.new(BLOCKS[:stylish].matrix, "stylish").plot
+class BlockDefinitionContainer
+	def self.[](name)
+		BLOCKS[name]
+	end
+end
 
-# result = map_matrix_to_origin(moved_line.matrix)
-# puts "Origin of       #{moved_line.matrix}"
-# puts "Matrix mapping:\n\tExpect: #{line.matrix}\n\tActual: #{result}"
-
-# puts "-----------"
-
-# test_matrix_origin = Matrix[[0, 1, 0],[0, 0, 1]]
-# test_matrix = Matrix[[4, 5, 4], [3, 3, 4]]
-# puts "Origin of       #{test_matrix}"
-# result = map_matrix_to_origin(test_matrix)
-# puts "Matrix mapping:\n\tExpect: #{test_matrix_origin}\n\tActual: #{result}"
-
-
-
-
+small_square = BlockDefinitionContainer[:small_square]
+puts "Matrix of small square: #{small_square.matrix}"
