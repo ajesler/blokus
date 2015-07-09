@@ -39,6 +39,8 @@ A player earns +15 points if all of their pieces have been placed on the board p
 - Player
 	- user
 	- game
+	- score? only added once the player is done
+	- Do we need to know when a player has passed?
 
 
 - Game
@@ -49,7 +51,8 @@ A player earns +15 points if all of their pieces have been placed on the board p
 
 - Block
 	- player
-	- type
+	- type - matches a BlockDefinition
+	- placed? = positions_occupied.present?
 	- positions_occupied - serialized or separate objects?
 	number of turn that the block was placed. Required for advanced scoring? Or could use last_updated_at to find most recently placed block? Would anything else update a block and interfere with this? Everything but positions_occupied assigned at creation.
 
@@ -63,6 +66,7 @@ Coordinates
 - Board - this is a concept, not an AR record
 	- size: 20x20
 
+
 #### Concerns
 
 - 2DPoint
@@ -74,7 +78,7 @@ Coordinates
 
 - BlockDefinition 
 	- name
-	- size
+	- size - returns shape.column_count
 	- shape (defined as a matrix containing a set of coordinates. This makes checking for rotation simpler. Array/Set also possible.)
 	provides the canonical shape of a type of block. There will be 21 of these, and they will be constants, as each game uses the same set of blocks. 
 
@@ -83,6 +87,8 @@ Coordinates
 	Stores a hash of name => BlockDefinition for all blocks in the game
 	Allows lookup of a BlockDefinition from a name
 	Can be used to get a collection of all block types
+	BlockDefinition
+
 	BlockDefinitionContainer.blocks
 	BlockDefinitionContainer[:block_name]
 	BlockDefinitionContainer::BLOCKS
@@ -90,6 +96,10 @@ Coordinates
 	Blocks.names
 	Blocks.blocks
 	Blocks[:block_name]
+
+	Shapes.shapes
+	Shapes.all
+	Shapes.identify(uknown_shape) -> returns the shape name.
 
 	File that defines a constant BLOCKS? Universally available.
 

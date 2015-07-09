@@ -189,17 +189,16 @@ end
 # Paper.new(result, "moved to origin").plot
 
 line = BLOCKS[:five_line]
-moved_line = UserShape.new("five line moved", Matrix[[7, 8, 9, 10, 11],[4, 4, 4, 4, 4]])
+moved_line = UserShape.new("five line moved", Matrix[[7, 8, 9, 10, 11], [4, 4, 4, 4, 4]])
 
 shapes_match = are_same_shape?(line, moved_line)
 puts "Recognises transformed shape: #{shapes_match}"
 
-unknown_shape = UserShape.new("unknown", Matrix[[9, 8, 9, 10, 8],[8, 9, 9, 9, 10]])
+unknown_shape = UserShape.new("unknown", Matrix[[9, 8, 9, 10, 8], [8, 9, 9, 9, 10]])
 shape_name = find_shape_name(unknown_shape)
 puts "Shape name of #{unknown_shape.name} is #{shape_name}"
 
 u_origin = map_matrix_to_origin(unknown_shape.matrix)
-# transformed_block = map_matrix_to_origin(TRANSFORMS[:reflect_y].matrix*TRANSFORMS[:rot_90_c].matrix * BLOCKS[:stylish].matrix)
 transformed_block = map_matrix_to_origin(TRANSFORMS[:reflect_y_negative_x].matrix * BLOCKS[:stylish].matrix)
 
 Paper.new(BLOCKS[:stylish].matrix, "stylish").plot
