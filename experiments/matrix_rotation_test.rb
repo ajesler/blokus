@@ -122,7 +122,6 @@ BLOCKS = {
 	:line_with_growth => BlockDefinition.new("line with growth", Matrix[[0, 0, 0, 1, 0],[0, 1, 2, 2, 3]])
 }
 
-# BLOCKS.values.each { |block| Paper.new(block.matrix, block.name).plot }
 
 def map_matrix_to_origin(matrix)
 	x_row = matrix.row(0).to_a
@@ -188,34 +187,36 @@ end
 # result = map_matrix_to_origin(result)
 # Paper.new(result, "moved to origin").plot
 
-line = BLOCKS[:five_line]
-moved_line = UserShape.new("five line moved", Matrix[[7, 8, 9, 10, 11], [4, 4, 4, 4, 4]])
+# line = BLOCKS[:five_line]
+# moved_line = UserShape.new("five line moved", Matrix[[7, 8, 9, 10, 11], [4, 4, 4, 4, 4]])
 
-shapes_match = are_same_shape?(line, moved_line)
-puts "Recognises transformed shape: #{shapes_match}"
+# shapes_match = are_same_shape?(line, moved_line)
+# puts "Recognises transformed shape: #{shapes_match}"
 
-unknown_shape = UserShape.new("unknown", Matrix[[9, 8, 9, 10, 8], [8, 9, 9, 9, 10]])
-shape_name = find_shape_name(unknown_shape)
-puts "Shape name of #{unknown_shape.name} is #{shape_name}"
+# unknown_shape = UserShape.new("unknown", Matrix[[9, 8, 9, 10, 8], [8, 9, 9, 9, 10]])
+# shape_name = find_shape_name(unknown_shape)
+# puts "Shape name of #{unknown_shape.name} is #{shape_name}"
 
-u_origin = map_matrix_to_origin(unknown_shape.matrix)
-transformed_block = map_matrix_to_origin(TRANSFORMS[:reflect_y_negative_x].matrix * BLOCKS[:stylish].matrix)
+# u_origin = map_matrix_to_origin(unknown_shape.matrix)
+# transformed_block = map_matrix_to_origin(TRANSFORMS[:reflect_y_negative_x].matrix * BLOCKS[:stylish].matrix)
 
-Paper.new(BLOCKS[:stylish].matrix, "stylish").plot
+# Paper.new(BLOCKS[:stylish].matrix, "stylish").plot
 
-title = "Unknown shape at origin"
-Paper.new(u_origin, title).plot
-puts u_origin
+# title = "Unknown shape at origin"
+# Paper.new(u_origin, title).plot
+# puts u_origin
 
-title = "Transformed stylish"
-Paper.new(transformed_block, title).plot
-puts transformed_block
+# title = "Transformed stylish"
+# Paper.new(transformed_block, title).plot
+# puts transformed_block
 
-class BlockDefinitionContainer
-	def self.[](name)
-		BLOCKS[name]
-	end
-end
+# class BlockDefinitionContainer
+# 	def self.[](name)
+# 		BLOCKS[name]
+# 	end
+# end
 
-small_square = BlockDefinitionContainer[:small_square]
-puts "Matrix of small square: #{small_square.matrix}"
+# small_square = BlockDefinitionContainer[:small_square]
+# puts "Matrix of small square: #{small_square.matrix}"
+
+BLOCKS.values.each { |block| Paper.new(block.matrix, block.name).plot }

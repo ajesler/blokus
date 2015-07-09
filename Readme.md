@@ -43,15 +43,15 @@ One point for each board square covered, +15 if all pieces used. +5 if last piec
 - Player
 	- user
 	- game
-	- score? only added once the player is done
-	- Do we need to know when a player has passed?
- 
+
+
 # ======= Method A ======= # 
 
 - Game
 	- players
 	- active_player
 	- blocks (scopes like player(p1), placed, not_placed)
+	- game_type ? classic_4, classic_3, classic_2, trigon, duo
 
 
 - Block
@@ -71,18 +71,18 @@ Coordinates
 
 - Game 
 	- players
-	- active_player
 	- turns
+	- shapes - the set of shapes available to each player
 
 - Turn
 	- player
-	- shape
-	- transform
-	- position (x, y)
+	- colour
+	- shape - empty if no player passed - use enums?
+	- transform - empty if player passed
+	- position (x, y) - empty if player passed
 
 - Shape
 	- name
-	- transforms_available
 	- definition (points in a matrix)
 
 - Transform
