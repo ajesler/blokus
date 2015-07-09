@@ -24,7 +24,11 @@ Player with the lowest number of unplayed squares wins.
 ##### Advanced Scoring  
 
 Each player counts the number of squares in their remaining pieces. 1 square = -1 point.
-A player earns +15 points if all of their pieces have been placed on the board plus 5 additional points if the last piece they placed on the board was the smallest piece (one square).  
+A player earns +15 points if all of their pieces have been placed on the board plus 5 additional points if the last piece they placed on the board was the smallest piece (one square). 
+
+##### Alternative Scoring
+
+One point for each board square covered, +15 if all pieces used. +5 if last piece player placed was the 1 square piece. 
 
 
 ### Model Design
@@ -41,7 +45,8 @@ A player earns +15 points if all of their pieces have been placed on the board p
 	- game
 	- score? only added once the player is done
 	- Do we need to know when a player has passed?
-
+ 
+# ======= Method A ======= # 
 
 - Game
 	- players
@@ -51,7 +56,7 @@ A player earns +15 points if all of their pieces have been placed on the board p
 
 - Block
 	- player
-	- type - matches a BlockDefinition
+	- type - Rails 4 enum? Use Shapes.names as set.
 	- placed? = positions_occupied.present?
 	- positions_occupied - serialized or separate objects?
 	number of turn that the block was placed. Required for advanced scoring? Or could use last_updated_at to find most recently placed block? Would anything else update a block and interfere with this? Everything but positions_occupied assigned at creation.
@@ -62,6 +67,28 @@ Coordinates
 	- x
 	- y
 
+# ======= Method B ======= # 
+
+- Game 
+	- players
+	- active_player
+	- turns
+
+- Turn
+	- player
+	- shape
+	- transform
+	- position (x, y)
+
+- Shape
+	- name
+	- transforms_available
+	- definition (points in a matrix)
+
+- Transform
+	- matrix
+
+# ======= End ======= # 
 
 - Board - this is a concept, not an AR record
 	- size: 20x20
@@ -139,4 +166,5 @@ Validation Checks for blocks need to look at:
 ### Extras
 
 - Offer hints to the player as to where a particular block could be placed.
+- Show all squares that can be covered with the players available blocks.
 - Build an AI to play against. 
