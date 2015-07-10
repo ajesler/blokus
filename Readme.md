@@ -28,7 +28,7 @@ A player earns +15 points if all of their pieces have been placed on the board p
 
 ##### Alternative Scoring
 
-One point for each board square covered, +15 if all pieces used. +5 if last piece player placed was the 1 square piece. 
+One point for each board square covered, +15 if all pieces used. +5 if last piece player placed was the 1 square piece. (Max = 109?)
 
 
 ### Model Design
@@ -163,8 +163,13 @@ Validation Checks for blocks need to look at:
 	- Least squares fitting of two 3d point sets - http://162.105.204.96/teachers/yaoy/Fall2011/arun.pdf
 
 
+### TODO
+
+- Move shapes to the DB
+
 ### Extras
 
 - Offer hints to the player as to where a particular block could be placed.
 - Show all squares that can be covered with the players available blocks.
-- Build an AI to play against. 
+- Build an AI to play against. f
+- Support different game types, eg duo & trigon
