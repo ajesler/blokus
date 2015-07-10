@@ -1,0 +1,1 @@
+Transform = Struct.new(:name, :definition)

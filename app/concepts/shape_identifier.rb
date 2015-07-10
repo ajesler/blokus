@@ -15,8 +15,6 @@ class ShapeIdentifier
 
 	private
 
-	Point2D = Struct.new(:x, :y)
-
 	def self.has_transform_that_matches?(known_shape, unknown_shape_coordinates)
 		TRANSFORMS.each do |name, transform|
 			transformed_shape_at_origin = move_to_origin(transform * known_shape.definition)
@@ -33,7 +31,7 @@ class ShapeIdentifier
 
 		shape_definition.column_count.times do |index|
 			x, y = shape_definition[0, index], shape_definition[1, index]
-			coordinate_set.add(Point2D.new(x, y))
+			coordinate_set.add(Point.new(x, y))
 		end
 
 		coordinate_set

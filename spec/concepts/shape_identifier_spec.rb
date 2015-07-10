@@ -5,17 +5,23 @@ RSpec.describe ShapeIdentifier do
 		subject { ShapeIdentifier.identify(shape_to_identify) }
 
 		context "with a known shape" do
-			let(:shape) { Shapes[:stylish] }
+			let(:shape) { Shapes["F"] }
 			let(:shape_to_identify) { shape.definition }
 
 			context "with no transforms applied" do
-				it { is_expected.to eq shape.name }
+				# TODO how to tidy?
+				# eg it "should identify the shape" { is_expected.to eq shape.name }"
+				it "should identify the shape" do 
+					is_expected.to eq shape.name
+				end
 			end
 
 			context "with an transform applied" do
 				let(:shape_to_identify) { Matrix[[9, 8, 9, 10, 8], [8, 9, 9, 9, 10]] }
 
-				it { is_expected.to eq shape.name }
+				it "should identify the shape" do
+					is_expected.to eq shape.name
+				end
 			end
 		end
 

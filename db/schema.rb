@@ -11,7 +11,29 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150707034702) do
+ActiveRecord::Schema.define(version: 20150710014330) do
+
+  create_table "players", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "game_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "players", ["game_id"], name: "index_players_on_game_id"
+  add_index "players", ["user_id"], name: "index_players_on_user_id"
+
+  create_table "turns", force: :cascade do |t|
+    t.integer  "player_id"
+    t.string   "shape"
+    t.string   "transform"
+    t.integer  "x"
+    t.integer  "y"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "turns", ["player_id"], name: "index_turns_on_player_id"
 
   create_table "users", force: :cascade do |t|
     t.string   "name",                                null: false
