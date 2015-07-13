@@ -76,7 +76,7 @@ Coordinates
 
 - Turn
 	- player
-	- colour
+	- colour - can generate this if the order of colours are known
 	- shape - empty if no player passed - use enums?
 	- transform - empty if player passed
 	- position (x, y) - empty if player passed
@@ -86,6 +86,7 @@ Coordinates
 	- definition (points in a matrix)
 
 - Transform
+	- name
 	- matrix
 
 # ======= End ======= # 
@@ -166,6 +167,7 @@ Validation Checks for blocks need to look at:
 ### TODO
 
 - Move shapes to the DB
+- Add an HTML view for the shapes - perhaps showing each?
 
 ### Extras
 

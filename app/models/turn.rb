@@ -7,7 +7,7 @@ class Turn < ActiveRecord::Base
 	validates :transform, transform: true
 	validates :transform, presence: true, if: :has_shape_or_transform?
 	validates :x, :y, absence: true, unless: :has_shape_or_transform?
-	validates :x, :y, 
+	validates :x, :y,
 		inclusion: { in: 0...Board::SIZE }, 
 		numericality: { only_integer: true }, 
 		if: :has_shape_or_transform?

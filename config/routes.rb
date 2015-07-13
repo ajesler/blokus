@@ -1,9 +1,11 @@
 Rails.application.routes.draw do
 
   devise_for :users
-  root to: "home#index"
+  root to: "shapes#index"
 
-  resources :shapes, :defaults => { :format => 'json' }
+  resources :shapes, param: :name, :only => [:index, :show], :defaults => { :format => 'json' }
+  resources :transforms, param: :name, :only => [:index, :show], :defaults => { :format => 'json' }
+  resources :colours, param: :index, :only => [:index, :show], :defaults => { :format => 'json' }
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
