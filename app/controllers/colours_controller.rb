@@ -2,17 +2,13 @@ class ColoursController < ApplicationController
 	def index
 		@colours = Colours.colours
 
-		respond_to do |format|
-			format.json { render json: @colours }
-		end
+		render json: @colours
 	end
 
 	def show
 		@colour = load_colour
 
-		respond_to do |format|
-			format.json { render json: @colour }
-		end
+		render json: @colour
 	end
 
 	private

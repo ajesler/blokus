@@ -1,3 +1,5 @@
+require 'matrix'
+
 class Shapes
 	# TODO merge this into Shape?
 	def self.names

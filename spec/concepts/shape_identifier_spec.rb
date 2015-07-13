@@ -9,8 +9,6 @@ RSpec.describe ShapeIdentifier do
 			let(:shape_to_identify) { shape.definition }
 
 			context "with no transforms applied" do
-				# TODO how to tidy?
-				# eg it "should identify the shape" { is_expected.to eq shape.name }"
 				it "should identify the shape" do 
 					is_expected.to eq shape.name
 				end

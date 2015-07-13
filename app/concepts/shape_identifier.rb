@@ -16,8 +16,8 @@ class ShapeIdentifier
 	private
 
 	def self.has_transform_that_matches?(known_shape, unknown_shape_coordinates)
-		TRANSFORMS.each do |name, transform|
-			transformed_shape_at_origin = move_to_origin(transform * known_shape.definition)
+		Transforms.transforms.each do |transform|
+			transformed_shape_at_origin = move_to_origin(transform.definition * known_shape.definition)
 			transformed_shape_at_origin_coordinates = coordinate_set(transformed_shape_at_origin)
 
 			return true if unknown_shape_coordinates == transformed_shape_at_origin_coordinates
@@ -46,15 +46,4 @@ class ShapeIdentifier
 			shape_definition[row, col] - origin_offset
 		end
 	end
-
-	TRANSFORMS = {
-		:rotate_90_c => Matrix[[0, 1], [-1, 0]],
-		:rotate_90_ac => Matrix[[0, -1], [1, 0]],
-		:rotate_180 => Matrix[[-1, 0], [0, -1]],
-		:reflect_x => Matrix[[1, 0], [0, -1]],
-		:reflect_y => Matrix[[-1, 0], [0, 1]],
-		:identity => Matrix[[1,0],[0, 1]],
-		:reflect_y_x => Matrix[[0, 1], [1, 0]],
-		:reflect_y_negative_x => Matrix[[0, -1], [-1, 0]]
-	}
 end

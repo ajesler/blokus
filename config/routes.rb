@@ -7,6 +7,10 @@ Rails.application.routes.draw do
   resources :transforms, param: :name, :only => [:index, :show], :defaults => { :format => 'json' }
   resources :colours, param: :index, :only => [:index, :show], :defaults => { :format => 'json' }
 
+  resources :games, :except => :edit, :defaults => { :format => 'json' } do
+    resources :turns, :only => [:index, :create]
+  end
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

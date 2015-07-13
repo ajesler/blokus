@@ -1,3 +1,5 @@
+require 'matrix'
+
 class Transforms
 	def self.names
 		TRANSFORMS.keys.sort!
