@@ -1,0 +1,29 @@
+<h1>Lobby</h1>
+
+<h3>Games</h3>
+
+<table>
+	<thead>
+		<tr>
+			<th>&nbsp;</th>
+			<th>Player One</th>
+			<th>Player Two</th>
+			<th>Player Three</th>
+			<th>Player Four</th>
+		</tr>
+	</thead>
+	<% @lobby.games.each do |game| %>
+		<tr>
+			<td><%= link_to 'Play', show_game_path(:id => game.id) %></td>
+			<td><%= game.player_one %></td>
+			<td><%= game.player_two %></td>
+			<td><%= game.player_three %></td>
+			<td><%= game.player_four %></td>
+		</tr>
+	<% end %>
+</table>
+
+<br />
+<br />
+
+<%= link_to 'New Game', new_game_path %>

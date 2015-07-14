@@ -1,25 +1,33 @@
 class GamesController < ApplicationController
 	def index
-		# show all a users games
+		@lobby = LobbyPresenter.new(current_user)
 	end
 
 	def show
-		# show a specific game
+		respond_to do |format|
+			format.json { render json: @game }
+			format.html { render 'show' }
+		end
 	end
 
 	def new
-		# show an HTML page for creating a new game
+		@game = Game.new
+		@opponents = User.where.not(id: current_user)
 	end
 
 	def create
-		# create a new game
-	end
+		form_object = CreateGameFormObject.new(params)
 
-	def update
-		# what can change on a game?
-	end
+		if form_object.valid?
+			new_game = StartNewGame.new(current_user,
+				form_object.player_two_user_id, 
+				form_object.player_three_user_id, 
+				form_object.player_four_user_id).call
 
-	def destroy
-		# destroy a specific game
+			redirect_to new_game
+		else
+			flash[:error] = "You must select three different players to join the game"
+			redirect_to new_game_url
+		end
 	end
 end

@@ -7,4 +7,8 @@ class Game < ActiveRecord::Base
 	def shapes
 		Shapes.shapes
 	end
+
+	def colours
+		Colours.colours
+	end
 end

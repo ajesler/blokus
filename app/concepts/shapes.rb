@@ -45,7 +45,7 @@ class Shapes
 			Shape.new("Y", Matrix[[0, 0, 0, 1, 0],[0, 1, 2, 2, 3]])
 		]
 
-		shapes.inject({}) { |hash, shape| hash[shape.name] = shape; hash }
+		shapes.each.with_object({}) { |shape, hash| hash[shape.name] = shape }
 	end
 
 	SHAPES = build_shapes_hash

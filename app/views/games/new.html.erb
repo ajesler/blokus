@@ -1,0 +1,27 @@
+<h1>New Game</h1>
+
+<%= form_for(@game) do |f| %>
+
+	<div>
+		<%= label_tag 'creator', "Player one: " %>
+		<span><%= current_user.name %></span>
+	</div>
+
+	<% %w(two three four).each do |player_number| %>
+	  <div>
+	    <%= label_tag 'player_'+player_number+'_user_id', "Player "+player_number+": " %>
+	    <%= select_tag "player_"+player_number+"_user_id", options_from_collection_for_select(@opponents, "id", "name") %>
+	  </div>
+	<% end %>
+
+	<br />
+
+  <div>
+    <%= f.submit %>
+  </div>
+<% end %>
+
+<br />
+<br />
+
+<%= link_to 'Back', games_path %>

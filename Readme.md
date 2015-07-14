@@ -39,35 +39,10 @@ One point for each board square covered, +15 if all pieces used. +5 if last piec
 	- name
 	- devise for auth - how will it integrate with Rails API?
 
-
 - Player
 	- user
 	- game
-
-
-# ======= Method A ======= # 
-
-- Game
-	- players
-	- active_player
-	- blocks (scopes like player(p1), placed, not_placed)
-	- game_type ? classic_4, classic_3, classic_2, trigon, duo
-
-
-- Block
-	- player
-	- type - Rails 4 enum? Use Shapes.names as set.
-	- placed? = positions_occupied.present?
-	- positions_occupied - serialized or separate objects?
-	number of turn that the block was placed. Required for advanced scoring? Or could use last_updated_at to find most recently placed block? Would anything else update a block and interfere with this? Everything but positions_occupied assigned at creation.
-
-
-Coordinates
-	- block
-	- x
-	- y
-
-# ======= Method B ======= # 
+	- turns
 
 - Game 
 	- players
@@ -76,10 +51,12 @@ Coordinates
 
 - Turn
 	- player
-	- colour - can generate this if the order of colours are known
 	- shape - empty if no player passed - use enums?
 	- transform - empty if player passed
 	- position (x, y) - empty if player passed
+
+
+#### Concerns
 
 - Shape
 	- name
@@ -89,48 +66,12 @@ Coordinates
 	- name
 	- matrix
 
-# ======= End ======= # 
-
-- Board - this is a concept, not an AR record
+- Board
 	- size: 20x20
 
-
-#### Concerns
-
-- 2DPoint
-	Envisioned for use in block checks. Can be used interchangably with Coordinates objects. Or create a Geometry module with a Coordinates object? Seems like it would be confusing.
-	Make 2DPoint methods a module so can be included in Coordinates?
+- Point - struct
 	- x
 	- y
-
-
-- BlockDefinition 
-	- name
-	- size - returns shape.column_count
-	- shape (defined as a matrix containing a set of coordinates. This makes checking for rotation simpler. Array/Set also possible.)
-	provides the canonical shape of a type of block. There will be 21 of these, and they will be constants, as each game uses the same set of blocks. 
-
-
-- BlockDefinitionContainer
-	Stores a hash of name => BlockDefinition for all blocks in the game
-	Allows lookup of a BlockDefinition from a name
-	Can be used to get a collection of all block types
-	BlockDefinition
-
-	BlockDefinitionContainer.blocks
-	BlockDefinitionContainer[:block_name]
-	BlockDefinitionContainer::BLOCKS
-
-	Blocks.names
-	Blocks.blocks
-	Blocks[:block_name]
-
-	Shapes.shapes
-	Shapes.all
-	Shapes.identify(uknown_shape) -> returns the shape name.
-
-	File that defines a constant BLOCKS? Universally available.
-
 
 
 ### Implementation Notes

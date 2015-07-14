@@ -14,6 +14,8 @@ RSpec.describe Turn, type: :model do
 		let(:transform_name) { nil }
 		let(:shape_name) { nil }
 
+		it { is_expected.to be_pass }
+
 		context "with nil x and y values" do
 			let(:x) { nil }
 			let(:y) { nil }
@@ -27,13 +29,15 @@ RSpec.describe Turn, type: :model do
 	end
 
 	context "with both a shape and a transform" do
+		it { is_expected.to_not be_pass }
+		
 		context "with non-nil x and y values that are on the board" do
 			it { is_expected.to be_valid }
 		end
 
 		context "with non-nil x and y values that are off the board" do
-			let(:x) { Board::SIZE * 10 }
-			let(:y) { Board::SIZE * 10 }
+			let(:x) { Board::DEFAULT_SIZE * 10 }
+			let(:y) { Board::DEFAULT_SIZE * 10 }
 
 			it { is_expected.to_not be_valid }
 		end

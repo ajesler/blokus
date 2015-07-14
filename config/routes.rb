@@ -1,13 +1,13 @@
 Rails.application.routes.draw do
 
   devise_for :users
-  root to: "shapes#index"
+  root to: "games#index"
 
   resources :shapes, param: :name, :only => [:index, :show], :defaults => { :format => 'json' }
   resources :transforms, param: :name, :only => [:index, :show], :defaults => { :format => 'json' }
   resources :colours, param: :index, :only => [:index, :show], :defaults => { :format => 'json' }
 
-  resources :games, :except => :edit, :defaults => { :format => 'json' } do
+  resources :games, :except => [:edit, :destroy, :update] do
     resources :turns, :only => [:index, :create]
   end
 

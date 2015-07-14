@@ -27,9 +27,8 @@ class Transforms
 			Transform.new("reflect_in_y_neg_x", Matrix[[0, -1], [-1, 0]])
 		]
 
-		transforms.inject({}) do |hash, transform| 
+		transforms.each.with_object({}) do |transform, hash|
 			hash[transform.name] = transform
-			hash
 		end
 	end
 

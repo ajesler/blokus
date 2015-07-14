@@ -6,4 +6,6 @@ class CreateUsers < ActiveRecord::Migration
       t.timestamps null: false
     end
   end
+
+  # TODO create name index that is unique
 end
