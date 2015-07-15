@@ -1,0 +1,15 @@
+one:
+  user: one
+  game: one
+
+two:
+  user: two
+  game: one
+
+three:
+  user: three
+  game: one
+
+four:
+  user: four
+  game: one

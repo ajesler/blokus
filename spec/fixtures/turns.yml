@@ -1,0 +1,107 @@
+one:
+  # blue
+  player: one
+  shape: "T4"
+  transform: "rotate_90_anticlockwise"
+  x: 0
+  y: 0
+  created_at: <%= 100.minutes.ago.to_s :db %>
+
+two:
+  # yellow
+  player: two
+  shape: "Y"
+  transform: "rotate_90_anticlockwise"
+  x: 16
+  y: 0
+  created_at: <%= 99.minutes.ago.to_s :db %>
+
+three:
+  # red
+  player: three
+  shape: "Z5"
+  transform: "reflect_in_y_x"
+  x: 17
+  y: 17
+  created_at: <%= 98.minutes.ago.to_s :db %>
+
+four:
+  # green
+  player: four
+  shape: "F"
+  transform: "identity"
+  x: 0
+  y: 17
+  created_at: <%= 97.minutes.ago.to_s :db %>
+
+five:
+  # blue
+  player: one
+  shape: "F"
+  transform: "rotate_180"
+  x: 1
+  y: 2
+  created_at: <%= 96.minutes.ago.to_s :db %>
+
+six:
+  # yellow
+  player: two
+  shape: "L5"
+  transform: "reflect_in_y_neg_x"
+  x: 12
+  y: 1
+  created_at: <%= 95.minutes.ago.to_s :db %>
+
+seven:
+  # red
+  player: three
+  shape: "I5"
+  transform: "rotate_90_clockwise"
+  x: 12
+  y: 16
+  created_at: <%= 94.minutes.ago.to_s :db %>
+
+eight:
+  # green
+  player: four
+  shape: "I5"
+  transform: "rotate_90_clockwise"
+  x: 3
+  y: 17
+  created_at: <%= 93.minutes.ago.to_s :db %>
+
+nine:
+  # blue
+  player: one
+  shape: "U"
+  transform: "rotate_90_clockwise"
+  x: 4
+  y: 3
+  created_at: <%= 92.minutes.ago.to_s :db %>
+
+ten:
+  # yellow
+  player: two
+  shape: "Z5"
+  transform: "identity"
+  x: 10
+  y: 3
+  created_at: <%= 91.minutes.ago.to_s :db %>
+
+eleven:
+  # red
+  player: three
+  shape: "Y"
+  transform: "reflect_in_y_x"
+  x: 8
+  y: 15
+  created_at: <%= 90.minutes.ago.to_s :db %>
+
+twelve:
+  # green
+  player: four
+  shape: "W"
+  transform: "identity"
+  x: 8
+  y: 16
+  created_at: <%= 89.minutes.ago.to_s :db %>

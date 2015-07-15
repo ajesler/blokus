@@ -29,4 +29,17 @@ class MatrixConversions
 			matrix[row, column] + offset
 		end
 	end
+
+	def self.move_to_origin(matrix)
+		min_x, min_y = min_in_row(matrix, 0), min_in_row(matrix, 1)
+
+		Matrix.build(matrix.row_count, matrix.column_count) do |row, col|
+			origin_offset = row == 0 ? min_x : min_y
+			matrix[row, col] - origin_offset
+		end
+	end
+
+	def self.min_in_row(matrix, row)
+		matrix.row(row).to_a.min
+	end
 end

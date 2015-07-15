@@ -17,7 +17,7 @@ class PlayPiece
 			return false
 		end
 
-		@colour = Colours.colours[game.turns.length + 1 % @game.colours.length]
+		@colour = @game.colours[@game.turns.length % @game.colours.length]
 		@shape = @identification.shape
 		@transform = @identification.transform
 		@position = @identification.position
@@ -25,8 +25,8 @@ class PlayPiece
 		@board = ConstructBoard.new(@game).call
 
 		piece_is_valid = valid?
-		if piece_is_valid?
-			@player.turn.create!(shape: @shape, transform: @transform, x: @position.x, y: @position.y)
+		if piece_is_valid
+			@player.turns.create!(shape: @shape, transform: @transform, x: @position.x, y: @position.y)
 		end
 
 		piece_is_valid
@@ -35,10 +35,13 @@ class PlayPiece
 	private
 
 	def valid?
-		valid = is_recognised_piece? &&
-			piece_has_not_been_used? &&
-			squares_covered_are_empty? &&
-		
+		valid = all_points_on_board?
+		valid &&= is_recognised_piece?
+		valid &&= piece_has_not_been_used?
+		valid &&= squares_covered_are_empty?
+
+		binding.pry
+
 		if is_colours_first_turn?
 			valid &&= covers_a_corner_square?
 		else
@@ -50,8 +53,8 @@ class PlayPiece
 	end
 
 	def is_colours_first_turn?
-		@game.turns.each.with_index do |index, turn|
-			turn_colour = Colour.colours[index % @game.colours.length]
+		@game.turns.play_order.each.with_index do |turn, index|
+			turn_colour = @game.colours[index % @game.colours.length]
 
 			return false if turn_colour == @colour
 		end
@@ -59,13 +62,17 @@ class PlayPiece
 		return true
 	end
 
+	def all_points_on_board?
+		@coordinates.all? { |point| @board.valid_position?(point.x, point.y) }
+	end
+
 	def is_recognised_piece?
 		@identification.identified?
 	end
 
 	def piece_has_not_been_used?
-		@game.turns.each.with_index do |index, turn|
-			turn_colour = Colour.colours[index % @game.colours.length]
+		@game.turns.play_order.each.with_index do |turn, index|
+			turn_colour = @game.colours[index % @game.colours.length]
 			piece_matches = turn.shape == @shape && turn_colour == @colour
 
 			return false if piece_matches
@@ -92,6 +99,7 @@ class PlayPiece
 
 	def at_least_one_corner_touching?
 		@board.squares_sharing_a_corner_with(@coordinates).any? do |point|
+			puts "Touching: #{point.x},#{point.y} is #{@board[point.x, point.y]}"
 			@board[point.x, point.y] == @colour
 		end
 	end
