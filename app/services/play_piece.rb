@@ -40,8 +40,6 @@ class PlayPiece
 		valid &&= piece_has_not_been_used?
 		valid &&= squares_covered_are_empty?
 
-		binding.pry
-
 		if is_colours_first_turn?
 			valid &&= covers_a_corner_square?
 		else
@@ -98,14 +96,19 @@ class PlayPiece
 	end
 
 	def at_least_one_corner_touching?
-		@board.squares_sharing_a_corner_with(@coordinates).any? do |point|
-			puts "Touching: #{point.x},#{point.y} is #{@board[point.x, point.y]}"
+		squares = @board.squares_sharing_a_corner_with(@coordinates)
+		squares = squares.subtract(@coordinates)
+
+		squares.any? do |point|
 			@board[point.x, point.y] == @colour
 		end
 	end
 
 	def does_not_touch_on_edges?
-		@board.squares_sharing_an_edge_with(@coordinates).none? do |point| 
+		squares = @board.squares_sharing_an_edge_with(@coordinates)
+		squares = squares.subtract(@coordinates)
+
+		squares.none? do |point| 
 			@board[point.x, point.y] == @colour
 		end
 	end

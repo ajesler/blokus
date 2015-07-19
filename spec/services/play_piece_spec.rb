@@ -49,11 +49,10 @@ RSpec.describe PlayPiece do
             context "when the colour has pieces on the board" do
               context "when the piece touches at least one corner of the same colour" do
                 context "when the piece does not share any edges with the same colour" do
-                  # P rotate_90_anticlockwise 7 7
-                  let(:coordinates) { [Point.new(7, 7), Point.new(8, 7), Point.new(9, 7), Point.new(8, 8), Point.new(9, 8)] }
+                  # P rotate_90_anticlockwise 6 6 
+                  let(:coordinates) { [Point.new(6, 6), Point.new(7, 6), Point.new(8, 6), Point.new(7, 7), Point.new(8, 7)] }
 
                   it "accepts the move" do
-                    print_game(game)
                     expect(subject).to be true
                   end
                 end
