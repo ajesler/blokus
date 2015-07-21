@@ -11,7 +11,11 @@
 var Blokus = (function () {
   var blokus = {};
   var Matrix = {};
+  var Transform = {};
+  var Shape = {};
   blokus.Matrix = Matrix;
+  blokus.Shape = Shape;
+  blokus.Transform = Transform;
 
   // from http://stackoverflow.com/questions/15313418/javascript-assert
   var assert = function(condition, message) { 
@@ -80,6 +84,62 @@ var Blokus = (function () {
     });
 
     return result;
+  };
+
+  Shape.are_same_coordinates = function(shape_a, shape_b) {
+    assert(shape_a.length == 2 && shape_b.length == 2);
+
+    if(shape_a[0].length != shape_b[0].length) {
+      return false;
+    }
+
+    var to_string_pairs = function(matrix){
+      pairs = [];
+
+      for(var i = 0; i < matrix[0].length; i++) {
+        pairs.push(matrix[0][i].toString()+","+matrix[1][i].toString());
+      }
+
+      return pairs;
+    };
+
+    var a_pairs = to_string_pairs(shape_a).sort();
+    var b_pairs = to_string_pairs(shape_b).sort();
+
+    var comparisons = a_pairs.map(function(element, index){
+      same = element == b_pairs[index];
+      return same;
+    });
+
+    var are_same = comparisons.every(function(element){
+      return element == true;
+    });
+
+    return are_same;
+  };
+
+  Shape.to_origin = function(shape){
+    assert(shape.length == 2);
+    
+    var min_x = Math.min.apply(null, shape[0]);
+    var min_y = Math.min.apply(null, shape[1]);
+
+    var result = Matrix.new_matrix(shape.length, shape[0].length);
+
+    for(var i = 0; i < shape[0].length; i++){
+      result[0][i] = shape[0][i] - min_x; 
+      result[1][i] = shape[1][i] - min_y; 
+    }
+
+    return result;
+  };
+
+  Transform.transforms = []; // how to load?
+
+  Shape.shapes = []; // how to load?
+
+  Shape.isomers = function(shape) {
+    // for each transform, generate all the isomers.
   };
 
   return blokus;

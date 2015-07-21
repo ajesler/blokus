@@ -46,4 +46,29 @@ describe("Blokus", function(){
       });
     });
   });
+
+  describe("Shape", function(){
+    describe(".are_same_coordinates", function(){
+      it("returns true if the coordinate sets are the same", function(){
+        shape_one = [[1,2,3],[4,5,6]];
+        shape_two = [[3,2,1],[6,5,4]];
+
+        expect(Blokus.Shape.are_same_coordinates(shape_one, shape_two)).toBe(true);
+      });
+    });
+
+    describe(".to_origin", function(){
+      it("moves the shape as close to the origin as possible", function(){
+        shape_one = [[-3, -2, -1, -3, -1], [-2, -2, -2, -1, -1]];
+        shape_two = [[7, 8, 9, 7, 9], [4, 4, 4, 5, 5]];
+        expected_result = [[0, 1, 2, 0, 2], [0, 0, 0, 1, 1]];
+
+        result_one = Blokus.Shape.to_origin(shape_one);
+        result_two = Blokus.Shape.to_origin(shape_two);
+
+        expect(Blokus.Shape.are_same_coordinates(result_one, expected_result)).toBe(true);
+        expect(Blokus.Shape.are_same_coordinates(result_two, expected_result)).toBe(true);
+      });
+    });
+  });
 });
