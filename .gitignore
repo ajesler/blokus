@@ -19,5 +19,7 @@
 !/log/.keep
 /tmp
 
+spec/tmp
+
 # gemsets
 .gems
