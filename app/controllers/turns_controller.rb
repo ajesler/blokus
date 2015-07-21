@@ -6,10 +6,18 @@ class TurnsController < ApplicationController
 	end
 
 	def create
-		# create a new turn in a game
-		# expect: player, array of coordinates
-		# convert to shape, transform, position { x, y }
-		# json only, so how to show errors?
+		create_turn_params = CreateTurnFormObject.new(params)
+
+		if create_turn_params.valid?
+			created = PlayPiece.new(@game, create_turn_params.player, create_turn_params.coordinates)
+			if created
+				# TODO respond positively
+			else
+				# TODO reject with error
+			end
+		else
+			# TODO reject with error
+		end
 	end
 
 	private
