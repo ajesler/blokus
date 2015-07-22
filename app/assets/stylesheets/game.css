@@ -1,13 +1,60 @@
 #pieces {
-  /*background: lightgray;*/
+  max-width: 20%;
 }
 
-.isomer, .block {
-  fill: lime;
-  stroke: black;
-  stroke-width: 4;
+#board {
+	
 }
 
-.shape h3 {
+.shape {
+  background: darkgray;
+}
+
+.shape div h3 {
   color: blue;
+  width: 100%;
+  height: auto;
+  background: lightgray;
+  padding: 5px;
+  margin: 0px;
 }
+
+.isomers {
+	height: auto;
+	width: auto;
+}
+
+.isomers:after {
+	clear: both;
+  content: "";
+  display: block;
+}
+
+.isomer {
+  float: left;
+	margin: 10px;
+}
+
+.block-blue {
+	stroke: blue;
+	fill: lightblue;
+}
+
+.block-yellow {
+	stroke: orange;
+	fill: yellow;
+}
+
+.block-red {
+	stroke: red;
+	fill: pink;
+}
+
+.block-green {
+	stroke: darkgreen;
+	fill: lightgreen;
+}
+
+/*.clearer {
+	clear: both;
+}*/

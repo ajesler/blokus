@@ -93,18 +93,29 @@ var Shape = (function(){
 
   Shape.prototype.svgRects = function(scale){
     var rects = [];
+    var xmax = 0, ymax = 0;
     for(var i = 0; i < this.shape_definition.column_count(); i++){
       var x = this.shape_definition.element(0, i);
       var y = this.shape_definition.element(1, i);
+      var scaledX = x * scale;
+      var scaledY = y * scale;
+
+      xmax = Math.max(xmax, x);
+      ymax = Math.max(ymax, y);
 
       rects.push({
-        x: x*scale,
-        y: y*scale,
+        x: scaledX,
+        y: scaledY,
         width: scale,
         height: scale
       });
     }
-    return rects;
+
+    return {
+      rects: rects,
+      width: (1+xmax)*scale,
+      height: (1+ymax)*scale
+    }
   };
 
   var contains_isomer = function(isomers, isomer) {
