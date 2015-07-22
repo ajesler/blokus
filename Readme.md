@@ -76,6 +76,8 @@ One point for each board square covered, +15 if all pieces used. +5 if last piec
 
 ### Implementation Notes
 
+Do all shape / piece identity work on the backend - eg front end asks for /game/players/pieces to return a set of all available pieces & isomers.
+
 Aim is to implement without any external JS libraries. D3 may prove useful for rendering the board.
 
 Matrix transforms could be handy for rotating / flipping blocks. See `experiments/matrix_rotation_test.rb`  
