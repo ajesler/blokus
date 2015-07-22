@@ -4,6 +4,12 @@ class GamesController < ApplicationController
 	end
 
 	def show
+		load_game
+		# TODO implement this
+		@active_colour = "green"
+		@player_colour = "green"
+		@turns_url = game_turns_path(@game)
+
 		respond_to do |format|
 			format.json { render json: @game }
 			format.html { render 'show' }
@@ -29,5 +35,15 @@ class GamesController < ApplicationController
 			flash[:error] = "You must select three different players to join the game"
 			redirect_to new_game_url
 		end
+	end
+
+	private 
+
+	def load_game
+		@game = current_user.games.find_by!(id: game_id)
+	end
+
+	def game_id
+		params.require(:id)
 	end
 end

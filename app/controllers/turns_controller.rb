@@ -2,7 +2,7 @@ class TurnsController < ApplicationController
 	before_action :load_game
 
 	def index
-		@turns = @game.turns
+		@turns = @game.turns.play_order.limit(3)
 	end
 
 	def create

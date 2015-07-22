@@ -16,7 +16,7 @@ var Shape = (function(){
     return pairs;
   };
 
-  var Shape = function(shape_definition){
+  var Shape = function(shape_definition, shapeName){
     if(shape_definition instanceof Array){
       assert(shape_definition.length == 2, "shape_definition must have exactly two rows");
       this.shape_definition = new Matrix(shape_definition);
@@ -25,6 +25,10 @@ var Shape = (function(){
       this.shape_definition = shape_definition; 
     } else {
       throw Error("shape_definition must be an Array or a Matrix");
+    }
+
+    if(typeof(shapeName) !== "undefined"){
+      this.nameOfShape = shapeName;
     }
   };
 
@@ -91,6 +95,27 @@ var Shape = (function(){
     return new Shape(result);
   };
 
+  Shape.prototype.transform = function(transform, x, y) {
+    if(typeof(x) === "undefined"){
+      x = 0;
+    }
+    if(typeof(y) === "undefined"){
+      y = 0;
+    }
+
+    var tmpShape = new Shape(transform.multiply(this.shape_definition)).to_origin();
+    var result = new Shape(this.shape_definition.offset([x, y]));
+    return result;
+  };
+
+  Shape.prototype.eachPoint = function(callback) {
+    var context = this;
+    for (var i = this.shape_definition.column_count() - 1; i >= 0; i--) {
+      var point = this.shape_definition.column(i);
+      callback.call(context, point[0], point[1]);
+    };
+  };
+
   Shape.prototype.svgRects = function(scale){
     var rects = [];
     var xmax = 0, ymax = 0;
@@ -128,9 +153,9 @@ var Shape = (function(){
   Shape.prototype.isomers = function() {
     var isomers = [];
 
-    Utils.forEachObjectKey(this, Transform.transforms, function(context, key, value){
-      var transform = new Matrix(value);
-      var transform_applied = transform.multiply(context.shape_definition);
+    var shape = this;
+    Utils.forEachObjectKey(Transform.transforms(), function(key, transform){
+      var transform_applied = transform.multiply(shape.shape_definition);
       var new_shape = new Shape(transform_applied);
       var result = new_shape.to_origin();
 
@@ -142,16 +167,23 @@ var Shape = (function(){
     return isomers;
   };
 
-  // How to load?
+  // TODO How to load?
   var all_shapes = {"Z4":[[0,0,1,1],[0,1,1,2]],"Z5":[[0,1,1,1,2],[0,0,1,2,2]],"N":[[0,0,1,1,1],[0,1,1,2,3]],"W":[[0,1,1,2,2],[0,0,1,1,2]],"X":[[0,1,1,2,1],[1,0,1,1,2]],"O":[[0,0,1,1],[0,1,1,0]],"1":[[0],[0]],"2":[[0,0],[0,1]],"I3":[[0,0,0],[0,1,2]],"I4":[[0,0,0,0],[0,1,2,3]],"I5":[[0,0,0,0,0],[0,1,2,3,4]],"V5":[[0,0,0,1,2],[0,1,2,2,2]],"V3":[[0,0,1],[0,1,1]],"L5":[[0,1,0,0,0],[0,0,1,2,3]],"L4":[[0,1,0,0],[0,0,1,2]],"U":[[0,1,2,0,2],[0,0,0,1,1]],"T4":[[1,0,1,2],[0,1,1,1]],"T5":[[1,1,0,1,2],[0,1,2,2,2]],"F":[[1,1,2,0,1],[0,1,1,2,2]],"P":[[0,1,0,1,0],[0,0,1,1,2]],"Y":[[0,0,0,1,0],[0,1,2,2,3]]};
-  Shape.shapes = function(){
-    var shapes = [];
-    Utils.forEachObjectKey(this, all_shapes, function(context, key, value){
-      var shape = new Shape(value);
-      shape.shapeName(key);
-      shapes.push(shape);
-    });
-    return shapes;
+
+  var shapes = {};
+  Utils.forEachObjectKey(all_shapes, function(key, value){
+    var shape = new Shape(value);
+    shape.shapeName(key);
+
+    shapes[key] = shape;
+  });
+
+  Shape.shapes = function(shape_name){
+    if(typeof(shape_name) === "undefined"){
+      return shapes;
+    } else {
+      return shapes[shape_name];
+    }
   };
 
   return Shape;

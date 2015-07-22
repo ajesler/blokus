@@ -4,6 +4,10 @@ A JS driven implementation of Blokus, with a Rails API version.
 
 There are 21 pieces per player.
 
+### Rails notes
+
+`rake db:fixtures:load FIXTURES_PATH=spec/fixtures` to load fixtures into the db of the current environment.
+
 
 ### Rules
 

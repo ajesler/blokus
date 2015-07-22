@@ -1,9 +1,27 @@
-#pieces {
-  max-width: 20%;
+#board {
+	float: left;
+	max-width: 75%;
 }
 
-#board {
+.squares {
 	
+}
+
+.squares:after{
+	clear: both;
+  content: "";
+  display: block;
+}
+
+.square {
+	float: left;
+	width: 20px;
+	height: 20px;
+}
+
+#pieces {
+  max-width: 20%;
+  float: left;
 }
 
 .shape {
@@ -55,6 +73,10 @@
 	fill: lightgreen;
 }
 
-/*.clearer {
-	clear: both;
-}*/
+[draggable] {
+	cursor: move;
+}
+
+.over {
+	border: 2px dashed #000;
+}

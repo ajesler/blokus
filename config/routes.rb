@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   resources :colours, param: :index, :only => [:index, :show], :defaults => { :format => 'json' }
 
   resources :games, :except => [:edit, :destroy, :update] do
-    resources :turns, :only => [:index, :create]
+    resources :turns, :only => [:index, :create], :defaults => { :format => 'json' }
   end
 
   # The priority is based upon order of creation: first created -> highest priority.

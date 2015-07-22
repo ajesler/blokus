@@ -1,15 +1,15 @@
 <h2>Play</h2>
 
 <script>
-
-function init(){
-  Blokus.renderPlayerPieces();
-};
-
 window.onload = function(){
-  init();
+  var gameSettings = {
+    activeColour: "<%= @active_colour %>",
+    playerColour: "<%= @player_colour %>",
+    turnsURL: "<%= @turns_url %>"
+  };
+  Blokus.init(gameSettings);
 };
 </script>
 
-<div id="pieces">
-</div>
+<div id="pieces"></div>
+<div id="board"></div>
