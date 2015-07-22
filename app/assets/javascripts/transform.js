@@ -8,22 +8,22 @@ var Transform = (function(){
     ],
     "rotate_90_clockwise": [
       [ 0, 1 ],
-      [ 1, 0 ]
+      [ -1, 0 ]
     ],
     "rotate_90_anticlockwise": [
-      [ 0, 1 ],
+      [ 0, -1 ],
       [ 1, 0 ]
     ],
     "rotate_180": [
-      [ 1, 0 ],
-      [ 0, 1 ]
+      [ -1, 0 ],
+      [ 0, -1 ]
     ],
     "reflection_in_x": [
       [ 1, 0 ],
-      [ 0, 1 ]
+      [ 0, -1 ]
     ],
     "reflection_in_y": [
-      [ 1, 0 ],
+      [ -1, 0 ],
       [ 0, 1 ]
     ],
     "reflect_in_y_x": [
