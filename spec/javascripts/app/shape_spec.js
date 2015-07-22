@@ -4,8 +4,24 @@ describe("Shape", function(){
   describe(".shapes", function(){
     it("should returns an object with shapes", function(){
       var cross_shape = new Shape([[1, 0, 1, 2, 1], [0, 1, 1, 1, 2]]);
-      var shapes = Shape.prototype.shapes;
-      expect(new Shape(shapes['X']).isEqualTo(cross_shape)).toBe(true);
+      var shapes = Shape.shapes();
+
+      expect(shapes.length).toBe(21);
+    });
+  });
+
+  describe("#name", function(){
+    it("returns 'unknown' if the shape name has not been set", function(){
+      var shape = new Shape([[1, 2], [3, 4]]);
+
+      expect(shape.shapeName()).toEqual("unknown");
+    });
+
+    it("returns the shape name if set", function(){
+      var shape = new Shape([[1, 2], [3, 4]]);
+      shape.shapeName("not a piece");
+
+      expect(shape.shapeName()).toEqual("not a piece");
     });
   });
 

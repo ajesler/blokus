@@ -28,6 +28,15 @@ var Shape = (function(){
     }
   };
 
+  Shape.prototype.shapeName = function(newName){
+    if(typeof(newName) === "undefined"){
+      return this.nameOfShape || "unknown";
+    } else {
+      this.nameOfShape = newName;
+      return this;
+    }
+  };
+
   Shape.prototype.are_same_coordinates = function(other_shape) {
     assert(this.shape_definition.row_count() == 2 && other_shape.shape_definition.row_count() == 2);
 
@@ -82,6 +91,22 @@ var Shape = (function(){
     return new Shape(result);
   };
 
+  Shape.prototype.svgRects = function(scale){
+    var rects = [];
+    for(var i = 0; i < this.shape_definition.column_count(); i++){
+      var x = this.shape_definition.element(0, i);
+      var y = this.shape_definition.element(1, i);
+
+      rects.push({
+        x: x*scale,
+        y: y*scale,
+        width: scale,
+        height: scale
+      });
+    }
+    return rects;
+  };
+
   var contains_isomer = function(isomers, isomer) {
     var matching_isomers = isomers.filter(function(shape){
       return shape.are_same_coordinates(isomer);
@@ -89,19 +114,10 @@ var Shape = (function(){
     return matching_isomers.length > 0;
   };
 
-  var iterate_object_keys = function(context, object, callback_function) {
-    for(var property in object){
-      if(object.hasOwnProperty(property)){
-        var value = object[property];
-        callback_function(context, property, value);
-      }
-    }
-  };
-
   Shape.prototype.isomers = function() {
     var isomers = [];
 
-    iterate_object_keys(this, Transform.transforms, function(context, key, value){
+    Utils.forEachObjectKey(this, Transform.transforms, function(context, key, value){
       var transform = new Matrix(value);
       var transform_applied = transform.multiply(context.shape_definition);
       var new_shape = new Shape(transform_applied);
@@ -116,7 +132,16 @@ var Shape = (function(){
   };
 
   // How to load?
-  Shape.prototype.shapes = {"Z4":[[0,0,1,1],[0,1,1,2]],"Z5":[[0,1,1,1,2],[0,0,1,2,2]],"N":[[0,0,1,1,1],[0,1,1,2,3]],"W":[[0,1,1,2,2],[0,0,1,1,2]],"X":[[0,1,1,2,1],[1,0,1,1,2]],"O":[[0,0,1,1],[0,1,1,0]],"1":[[0],[0]],"2":[[0,0],[0,1]],"I3":[[0,0,0],[0,1,2]],"I4":[[0,0,0,0],[0,1,2,3]],"I5":[[0,0,0,0,0],[0,1,2,3,4]],"V5":[[0,0,0,1,2],[0,1,2,2,2]],"V3":[[0,0,1],[0,1,1]],"L5":[[0,1,0,0,0],[0,0,1,2,3]],"L4":[[0,1,0,0],[0,0,1,2]],"U":[[0,1,2,0,2],[0,0,0,1,1]],"T4":[[1,0,1,2],[0,1,1,1]],"T5":[[1,1,0,1,2],[0,1,2,2,2]],"F":[[1,1,2,0,1],[0,1,1,2,2]],"P":[[0,1,0,1,0],[0,0,1,1,2]],"Y":[[0,0,0,1,0],[0,1,2,2,3]]};
+  var all_shapes = {"Z4":[[0,0,1,1],[0,1,1,2]],"Z5":[[0,1,1,1,2],[0,0,1,2,2]],"N":[[0,0,1,1,1],[0,1,1,2,3]],"W":[[0,1,1,2,2],[0,0,1,1,2]],"X":[[0,1,1,2,1],[1,0,1,1,2]],"O":[[0,0,1,1],[0,1,1,0]],"1":[[0],[0]],"2":[[0,0],[0,1]],"I3":[[0,0,0],[0,1,2]],"I4":[[0,0,0,0],[0,1,2,3]],"I5":[[0,0,0,0,0],[0,1,2,3,4]],"V5":[[0,0,0,1,2],[0,1,2,2,2]],"V3":[[0,0,1],[0,1,1]],"L5":[[0,1,0,0,0],[0,0,1,2,3]],"L4":[[0,1,0,0],[0,0,1,2]],"U":[[0,1,2,0,2],[0,0,0,1,1]],"T4":[[1,0,1,2],[0,1,1,1]],"T5":[[1,1,0,1,2],[0,1,2,2,2]],"F":[[1,1,2,0,1],[0,1,1,2,2]],"P":[[0,1,0,1,0],[0,0,1,1,2]],"Y":[[0,0,0,1,0],[0,1,2,2,3]]};
+  Shape.shapes = function(){
+    var shapes = [];
+    Utils.forEachObjectKey(this, all_shapes, function(context, key, value){
+      var shape = new Shape(value);
+      shape.shapeName(key);
+      shapes.push(shape);
+    });
+    return shapes;
+  };
 
   return Shape;
 })();

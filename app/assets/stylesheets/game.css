@@ -1,0 +1,13 @@
+#pieces {
+  /*background: lightgray;*/
+}
+
+.isomer, .block {
+  fill: lime;
+  stroke: black;
+  stroke-width: 4;
+}
+
+.shape h3 {
+  color: blue;
+}
