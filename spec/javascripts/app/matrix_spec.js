@@ -15,19 +15,19 @@ describe("Matrix", function() {
     });
   });
 
-  describe("#row_count", function(){
+  describe("#rowCount", function(){
     it("returns the number of rows in a matrix", function(){
       var matrix = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12]]);
 
-      expect(matrix.row_count()).toEqual(4);
+      expect(matrix.rowCount()).toEqual(4);
     });
   });
 
-  describe("#column_count", function(){
+  describe("#columnCount", function(){
     it("returns the number of columns in a matrix", function(){
       var matrix = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12]]);
 
-      expect(matrix.column_count()).toEqual(3);
+      expect(matrix.columnCount()).toEqual(3);
     });
   });
 

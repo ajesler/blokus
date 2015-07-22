@@ -1,16 +1,9 @@
-// svg shape drawing methods
-
-// draw board from turn list
-
-// draw available pieces and isomers sidebar
-
-// drag and drop piece functionality
-
 var Blokus = (function () {
   var RED = "red";
   var GREEN = "green";
   var BLUE = "blue";
   var YELLOW = "yellow";
+  var PLAYER_COLOURS = [BLUE, YELLOW, RED, GREEN];
   var BLANK = "";
 
   var blokus = {};
@@ -54,14 +47,15 @@ var Blokus = (function () {
   blokus.buildBoard = function(){
     board = new Board();
 
-    turns.forEach(function(turn){
-      // convert turn to coordinates
+    turns.forEach(function(turn, index){
+      var colour = PLAYER_COLOURS[index % 4];
+
       transform = Transform.transforms(turn.transform);
       shape = Shape.shapes(turn.shape);
       var positionedShape = shape.transform(transform, turn.x, turn.y);
 
       positionedShape.eachPoint(function(x, y){
-        board.square(x, y, GREEN);
+        board.square(x, y, colour);
       });
     });
   };
@@ -72,7 +66,7 @@ var Blokus = (function () {
   };
 
   blokus.renderBoard = function(){
-    // Render.board(board);
+    Render.board(board);
   };
 
   blokus.initDragAndDrop = function(){

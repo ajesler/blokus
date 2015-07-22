@@ -6,14 +6,15 @@ var Render = (function(){
   render.board = function(board){
   	var boardContainer = document.getElementById("board");
 
-  	board.forEachSquare(function(x, y, value){
+    board.forEachSquare(function(x, y, value){
       // render square
+      render.boardSquare()
     });
   };
 
   render.boardSquare = function(colour){
-  	var svg = document.createElementNS(SVG_NS, "svg");
 
+  	var svg = document.createElementNS(SVG_NS, "svg");
     svg.setAttribute("width", SCALE);
     svg.setAttribute("height", SCALE);
     
@@ -33,7 +34,6 @@ var Render = (function(){
   }
 
   render.isomer = function(isomer, colour){
-    // create an svg element
     var svg = document.createElementNS(SVG_NS, "svg");
 
     var svgData = isomer.svgRects(SCALE);

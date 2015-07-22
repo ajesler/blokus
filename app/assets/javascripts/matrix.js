@@ -66,11 +66,11 @@ var Matrix = (function(){
     }
   };
 
-  Matrix.prototype.row_count = function() {
+  Matrix.prototype.rowCount = function() {
     return this.matrix.length;
   }
 
-  Matrix.prototype.column_count = function() {
+  Matrix.prototype.columnCount = function() {
     return this.matrix[0].length;
   }
 
@@ -79,9 +79,9 @@ var Matrix = (function(){
   };
 
   Matrix.prototype.column = function(column) {
-    var result = new Array(this.row_count());
+    var result = new Array(this.rowCount());
 
-    for(var i = 0; i < this.row_count(); i++){
+    for(var i = 0; i < this.rowCount(); i++){
       result[i] = this.matrix[i][column];
     }
 
@@ -103,12 +103,12 @@ var Matrix = (function(){
   };
 
   Matrix.prototype.multiply = function(other_matrix) {
-    assert(this.column_count() == other_matrix.row_count(), "matrix sizes are not compatible");
+    assert(this.columnCount() == other_matrix.rowCount(), "matrix sizes are not compatible");
 
-    var result = new Matrix(this.row_count(), other_matrix.column_count());
+    var result = new Matrix(this.rowCount(), other_matrix.columnCount());
 
     this.matrix.forEach(function(row, row_index) {
-      for(var column_index = 0; column_index < other_matrix.column_count(); column_index++) {
+      for(var column_index = 0; column_index < other_matrix.columnCount(); column_index++) {
 
         column = other_matrix.column(column_index);
 
@@ -140,8 +140,8 @@ var Matrix = (function(){
   };
 
   Matrix.prototype.element = function(row, column, value) {
-    assert(row < this.row_count(), "Row bounds exceeded");
-    assert(column < this.column_count(), "Column bounds exceeded");
+    assert(row < this.rowCount(), "Row bounds exceeded");
+    assert(column < this.columnCount(), "Column bounds exceeded");
 
     if(typeof(value) === "undefined") {
       return this.matrix[row][column];

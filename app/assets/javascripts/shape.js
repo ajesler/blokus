@@ -9,7 +9,7 @@ var Shape = (function(){
   var to_string_pairs = function(matrix){
     pairs = [];
 
-    for(var i = 0; i < matrix.column_count(); i++) {
+    for(var i = 0; i < matrix.columnCount(); i++) {
       pairs.push(matrix.element(0, i).toString()+","+matrix.element(1, i).toString());
     }
 
@@ -21,7 +21,7 @@ var Shape = (function(){
       assert(shape_definition.length == 2, "shape_definition must have exactly two rows");
       this.shape_definition = new Matrix(shape_definition);
     } else if(shape_definition instanceof Matrix) {
-      assert(shape_definition.row_count() == 2, "shape_definition must have exactly two rows");
+      assert(shape_definition.rowCount() == 2, "shape_definition must have exactly two rows");
       this.shape_definition = shape_definition; 
     } else {
       throw Error("shape_definition must be an Array or a Matrix");
@@ -41,14 +41,14 @@ var Shape = (function(){
     }
   };
 
-  Shape.prototype.are_same_coordinates = function(other_shape) {
-    assert(this.shape_definition.row_count() == 2 && other_shape.shape_definition.row_count() == 2);
+  Shape.prototype.hasSameCoordinates = function(other_shape) {
+    assert(this.shape_definition.rowCount() == 2 && other_shape.shape_definition.rowCount() == 2);
 
     if(!(other_shape instanceof Shape)){
       return false;
     }
 
-    if(this.shape_definition.column_count() != other_shape.shape_definition.column_count()) {
+    if(this.shape_definition.columnCount() != other_shape.shape_definition.columnCount()) {
       return false;
     }
 
@@ -67,7 +67,7 @@ var Shape = (function(){
     return are_same;
   };
 
-  Shape.prototype.min_in_row = function(row){
+  Shape.prototype.minInRow = function(row){
     return Math.min.apply(null, this.shape_definition.row(row));
   };
 
@@ -76,16 +76,16 @@ var Shape = (function(){
       return false;
     }
 
-    return this.are_same_coordinates(other_shape);
+    return this.hasSameCoordinates(other_shape);
   };
 
-  Shape.prototype.to_origin = function(){
-    var min_x = this.min_in_row(0);
-    var min_y = this.min_in_row(1);
+  Shape.prototype.moveToOrigin = function(){
+    var min_x = this.minInRow(0);
+    var min_y = this.minInRow(1);
 
-    var result = new Matrix(this.shape_definition.row_count(), this.shape_definition.column_count());
+    var result = new Matrix(this.shape_definition.rowCount(), this.shape_definition.columnCount());
 
-    for(var i = 0; i < this.shape_definition.column_count(); i++) {
+    for(var i = 0; i < this.shape_definition.columnCount(); i++) {
       var x = this.shape_definition.element(0, i) - min_x; 
       var y = this.shape_definition.element(1, i) - min_y; 
       result.element(0, i, x);
@@ -103,14 +103,14 @@ var Shape = (function(){
       y = 0;
     }
 
-    var tmpShape = new Shape(transform.multiply(this.shape_definition)).to_origin();
+    var tmpShape = new Shape(transform.multiply(this.shape_definition)).moveToOrigin();
     var result = new Shape(this.shape_definition.offset([x, y]));
     return result;
   };
 
   Shape.prototype.eachPoint = function(callback) {
     var context = this;
-    for (var i = this.shape_definition.column_count() - 1; i >= 0; i--) {
+    for (var i = this.shape_definition.columnCount() - 1; i >= 0; i--) {
       var point = this.shape_definition.column(i);
       callback.call(context, point[0], point[1]);
     };
@@ -119,7 +119,7 @@ var Shape = (function(){
   Shape.prototype.svgRects = function(scale){
     var rects = [];
     var xmax = 0, ymax = 0;
-    for(var i = 0; i < this.shape_definition.column_count(); i++){
+    for(var i = 0; i < this.shape_definition.columnCount(); i++){
       var x = this.shape_definition.element(0, i);
       var y = this.shape_definition.element(1, i);
       var scaledX = x * scale;
@@ -143,9 +143,9 @@ var Shape = (function(){
     }
   };
 
-  var contains_isomer = function(isomers, isomer) {
+  var containsIsomer = function(isomers, isomer) {
     var matching_isomers = isomers.filter(function(shape){
-      return shape.are_same_coordinates(isomer);
+      return shape.hasSameCoordinates(isomer);
     });
     return matching_isomers.length > 0;
   };
@@ -155,11 +155,12 @@ var Shape = (function(){
 
     var shape = this;
     Utils.forEachObjectKey(Transform.transforms(), function(key, transform){
+      // call with this?
       var transform_applied = transform.multiply(shape.shape_definition);
       var new_shape = new Shape(transform_applied);
-      var result = new_shape.to_origin();
+      var result = new_shape.moveToOrigin();
 
-      if(!contains_isomer(isomers, result)){
+      if(!containsIsomer(isomers, result)){
         isomers.push(result);
       }
     });

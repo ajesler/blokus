@@ -33,34 +33,34 @@ describe("Shape", function(){
       var f_isomers = f_shape.isomers();
       expect(f_isomers.length).toBe(8);
 
-      // var cross_isomers = cross_shape.isomers();
-      // expect(cross_isomers.length).toBe(1);
+      var cross_isomers = cross_shape.isomers();
+      expect(cross_isomers.length).toBe(1);
 
-      // var two_isomers = two_shape.isomers();
-      // expect(two_isomers.length).toBe(2);
+      var two_isomers = two_shape.isomers();
+      expect(two_isomers.length).toBe(2);
     });
   });
 
-  describe("#are_same_coordinates", function(){
+  describe("#hasSameCoordinates", function(){
     it("returns true if the coordinate sets are the same", function(){
       var shape_one = new Shape([[1,2,3],[4,5,6]]);
       var shape_two = new Shape([[3,2,1],[6,5,4]]);
 
-      expect(shape_one.are_same_coordinates(shape_two)).toBe(true);
+      expect(shape_one.hasSameCoordinates(shape_two)).toBe(true);
     });
   });
 
-  describe("#to_origin", function(){
+  describe("#moveToOrigin", function(){
     it("moves the shape as close to the origin as possible", function(){
       var shape_one = new Shape([[-3, -2, -1, -3, -1], [-2, -2, -2, -1, -1]]);
       var shape_two = new Shape([[7, 8, 9, 7, 9], [4, 4, 4, 5, 5]]);
       var expected_result = new Shape([[0, 1, 2, 0, 2], [0, 0, 0, 1, 1]]);
 
-      var result_one = shape_one.to_origin();
-      var result_two = shape_two.to_origin();
+      var result_one = shape_one.moveToOrigin();
+      var result_two = shape_two.moveToOrigin();
 
-      expect(expected_result.are_same_coordinates(result_one)).toBe(true);
-      expect(expected_result.are_same_coordinates(result_two)).toBe(true);
+      expect(expected_result.hasSameCoordinates(result_one)).toBe(true);
+      expect(expected_result.hasSameCoordinates(result_two)).toBe(true);
     });
   });
 });
