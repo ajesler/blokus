@@ -98,11 +98,14 @@ var Render = (function(){
     return shapeContainer;
   };
   
-  render.playerPieces = function(container, colour) {
+  render.playerPieces = function(container, colour, usedShapes) {
     var shapes = Shape.shapes();
     Utils.forEachKeyValue(shapes, function(key, shape){
-      var shapeContainer = render.shape(shape, colour);
-      container.appendChild(shapeContainer);
+      if(!Utils.containsElement(usedShapes, key))
+      {
+        var shapeContainer = render.shape(shape, colour);
+        container.appendChild(shapeContainer); 
+      }
     });
   };
 

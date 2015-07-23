@@ -13,6 +13,8 @@ var Blokus = (function () {
   var dragSourceElement = null;
   var board = null;
 
+  var pieceCoords = null;
+
   var writeLog = function(message){
     document.getElementById("log").innerHTML = message;
   }
@@ -66,7 +68,14 @@ var Blokus = (function () {
 
   blokus.renderPlayerPieces = function(){
     var piecesContainer = document.getElementById("pieces");
-    return Render.playerPieces(piecesContainer, settings.playerColour);
+
+    var usedShapes = turns.filter(function(turn, index){
+      return PLAYER_COLOURS.indexOf(settings.playerColour) == index % 4
+    }).map(function(turn){
+      return turn.shape;
+    });
+
+    return Render.playerPieces(piecesContainer, settings.playerColour, usedShapes);
   };
 
   blokus.renderBoard = function(){
@@ -96,14 +105,14 @@ var Blokus = (function () {
   var handleDragEnter = function(e) {
     // this / e.target is the current hover target.
 
-    var coordinates = getPieceCoverage(e);    
-    highlightDropSquares(coordinates);
+    pieceCoords = getPieceCoverage(e);
+
+    unhighlightDropSquares();
   };
 
   var handleDragLeave = function(e) {
-    // this.classList.remove('over');  // this / e.target is previous target element.
-    var coordinates = getPieceCoverage(e);
-    unhighlightDropSquares(coordinates);
+    // this / e.target is previous target element.
+    highlightDropSquares();
   };
 
   var getXAndY = function(e){
@@ -139,71 +148,47 @@ var Blokus = (function () {
     return matrix;
   }
 
-  var incrementEnterCount = function(square){
-    if(typeof(square.enterCount) !== "undefined") {
-      square.enterCount += 1;
-    } else {
-      square.enterCount = 1;
-    }
-  }
+  var highlightDropSquares = function(){
+    if(pieceCoords != null){
+      var messages = [];
+      var validPlacement = board.validMove(pieceCoords, settings.playerColour);
+      var highlightClass = validPlacement ? "over" : "invalid-placement";
+      
+      for(var i = pieceCoords.columnCount() - 1; i >= 0; i--){
+        var point = pieceCoords.column(i);
+        var square = getSquare(point[0], point[1]);
 
-  var decrementEnterCount = function(square){
-    if(typeof(square.enterCount) !== "undefined") {
-      square.enterCount -= 1;
-    } else {
-      square.enterCount = 0;
-    }
-  }
+        var log = point[0]+", "+point[1]+" has classes "+square.classList;
+        messages.push(log);
 
-  var hasZeroEnterCount = function(square){
-    if(typeof(square.enterCount) !== "undefined") {
-      return square.enterCount == 0;
-    } else {
-      return false;
-    }
-  }
-
-  var highlightDropSquares = function(matrix){
-    var messages = [];
-    var validPlacement = board.validMove(matrix, settings.playerColour);
-    var highlightClass = validPlacement ? "over" : "invalid-placement";
-    
-    for(var i = matrix.columnCount() - 1; i >= 0; i--){
-      var point = matrix.column(i);
-      var square = getSquare(point[0], point[1]);
-      incrementEnterCount(square);
-
-      var log = point[0]+", "+point[1]+" has classes "+square.classList;
-      messages.push(log);
-
-      square.classList.add(highlightClass);
-    }
-    writeLog(messages.join("<br />"));
-  }
-
-  var unhighlightDropSquares = function(matrix){
-    for(var i = matrix.columnCount() - 1; i >= 0; i--){
-      var point = matrix.column(i);
-      var square = getSquare(point[0], point[1]);
-      decrementEnterCount(square);
-
-      if(hasZeroEnterCount(square)){
-        square.classList.remove("over");
-        square.classList.remove("invalid-placement");
+        square.classList.add(highlightClass);
       }
+      writeLog(messages.join("<br />"));
     }
   }
 
-  var placePiece = function(matrix){
+  var unhighlightDropSquares = function(){
+    var over = document.querySelectorAll(".square[class*=over]");
+    var invalid = document.querySelectorAll(".square[class*=invalid-placement]");
+
+    for(var i = 0; i < over.length; i++){
+      over[i].classList.remove("over");
+    }
+
+    for(var i = 0; i < invalid.length; i++){
+      invalid[i].classList.remove("invalid-placement");
+    }
+  }
+
+  var placePiece = function(){
+    var matrix = pieceCoords.clone();
+    pieceCoords = null;
+
+    unhighlightDropSquares();
+
     for(var i = matrix.columnCount() - 1; i >= 0; i--){
       var point = matrix.column(i);
       var square = getSquare(point[0], point[1]);
-      decrementEnterCount(square);
-
-      if(hasZeroEnterCount(square)){
-        square.classList.remove("over");
-        square.classList.remove("invalid-placement");
-      }
 
       square.classList.add("wide-stroke", "block-"+settings.playerColour);
       board.square(point[0], point[1], settings.playerColour);
@@ -212,7 +197,6 @@ var Blokus = (function () {
     // delete the dragSourceElement
     dragSourceElement.remove();
     dragSourceElement = null;
-    console.log("\tpiece successfully placed!")
   }
 
   function handleDrop(e) {
@@ -227,12 +211,9 @@ var Blokus = (function () {
 
       // if the target is a square, allow it
       var coordinates = getPieceCoverage(e);
-      console.log("attempting to place shape at "+coordinates.matrix.join(" | "));
       
       if(board.validMove(coordinates, settings.playerColour)){
         placePiece(coordinates);
-      } else {
-        console.log("\tcannot place piece - not a valid move");
       }
     }
 
@@ -241,21 +222,13 @@ var Blokus = (function () {
 
   function handleDragEnd(e) {
     // this/e.target is the source node.
-
-    var pieces = document.querySelectorAll('.squares .square');
-    [].forEach.call(pieces, function (piece) {
-      piece.classList.remove('over');
-      piece.classList.remove('invalid-placement');
-    });
+    unhighlightDropSquares();
   };
 
   blokus.initDragAndDrop = function(){
     var pieces = document.querySelectorAll('.isomers .isomer');
     [].forEach.call(pieces, function(piece) {
       piece.addEventListener('dragstart', handleDragStart, false);
-      // piece.addEventListener('dragenter', handleDragEnter, false);
-      // piece.addEventListener('dragover', handleDragOver, false);
-      // piece.addEventListener('dragleave', handleDragLeave, false);
       piece.addEventListener('drop', handleDrop, false);
       piece.addEventListener('dragend', handleDragEnd, false);
     });
