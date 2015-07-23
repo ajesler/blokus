@@ -30,16 +30,6 @@
   overflow: hidden;
 }
 
-#log {
-  padding: 5px;
-  width: 600px;
-  height: 50px;
-  position: fixed;
-  top: 630px;
-  left: 500px;
-  border: 1px solid red;
-}
-
 #pieces {
   position: fixed;
   left: 0;

@@ -15,10 +15,6 @@ var Blokus = (function () {
 
   var pieceCoords = null;
 
-  var writeLog = function(message){
-    document.getElementById("log").innerHTML = message;
-  }
-
   var turnsLoadedCallback = function(turnsJSON){
     turns = turnsJSON;
     blokus.buildBoard();
@@ -48,7 +44,7 @@ var Blokus = (function () {
 
     request.open("GET", settings.turnsURL, true);
     request.send(null);
-  }
+  };
 
   blokus.buildBoard = function(){
     board = new Board();
@@ -138,12 +134,6 @@ var Blokus = (function () {
     var point = getXAndY(square);
     var coordinates = getCoordinates(dragSourceElement);
     var matrix = new Matrix(coordinates).offset(point);
-    
-    var messages = [];
-    messages.push("               x,y = "+point);
-    messages.push("isomer coordinates = "+coordinates.join(" | "));
-    messages.push("    covered coords = "+matrix.matrix.join(" | "))
-    writeLog(messages.join("<br />"));
 
     return matrix;
   }
@@ -158,12 +148,8 @@ var Blokus = (function () {
         var point = pieceCoords.column(i);
         var square = getSquare(point[0], point[1]);
 
-        var log = point[0]+", "+point[1]+" has classes "+square.classList;
-        messages.push(log);
-
         square.classList.add(highlightClass);
       }
-      writeLog(messages.join("<br />"));
     }
   }
 
