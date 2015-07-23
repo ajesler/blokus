@@ -70,6 +70,10 @@ var Matrix = (function(){
     }
   };
 
+  Matrix.prototype.toArray = function() {
+    return this.matrix.clone();
+  };
+
   Matrix.prototype.rowCount = function() {
     return this.matrix.length;
   }

@@ -2,6 +2,7 @@ var Render = (function(){
 	var render = {};
   var SCALE = 30;
   var SVG_NS = "http://www.w3.org/2000/svg";
+  var BOARD_SIZE = 20;
 
   render.board = function(board){
   	var boardContainer = document.getElementById("board");
@@ -9,12 +10,12 @@ var Render = (function(){
     var squaresContainer = document.createElement("div");
     squaresContainer.setAttribute("class", "squares");
 
-    board.forEachRow(function(row){
+    board.forEachRow(function(row, y){
       var squareRowContainer = document.createElement("div");
       squareRowContainer.setAttribute("class", "square-row");
 
-      row.forEach(function(square){
-        var square = render.boardSquare(square);
+      row.forEach(function(square, x){
+        var square = render.boardSquare(x, y, square);
         squareRowContainer.appendChild(square);
       });
 
@@ -24,7 +25,7 @@ var Render = (function(){
     boardContainer.appendChild(squaresContainer);
   };
 
-  render.boardSquare = function(colour){
+  render.boardSquare = function(x, y, colour){
   	var svg = document.createElementNS(SVG_NS, "svg");
     
     var svgRect = document.createElementNS(SVG_NS, "rect");
@@ -35,9 +36,12 @@ var Render = (function(){
     var svgDiv = document.createElement("div");
     var classString = "square";
     if(colour !== "") {
-      classString += " block-"+colour;
+      classString += " wide-stroke block-"+colour;
     }
+
     svgDiv.setAttribute("class", classString);
+    svgDiv.setAttribute("data-x", x);
+    svgDiv.setAttribute("data-y", y);
     svgDiv.appendChild(svg);
 
     return svgDiv;
@@ -62,6 +66,10 @@ var Render = (function(){
     var svgDiv = document.createElement("div");
     svgDiv.setAttribute("draggable", "true");
     svgDiv.setAttribute("class", "isomer block-"+colour);
+
+    var coordinates = JSON.stringify(isomer.definition());
+    svgDiv.setAttribute("data-coordinates", coordinates);
+    
     svgDiv.appendChild(svg);
 
     return svgDiv;

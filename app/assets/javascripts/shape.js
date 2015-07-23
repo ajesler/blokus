@@ -32,6 +32,10 @@ var Shape = (function(){
     }
   };
 
+  Shape.prototype.definition = function() {
+    return this.shape_definition.toArray();
+  };
+
   Shape.prototype.shapeName = function(newName){
     if(typeof(newName) === "undefined"){
       return this.nameOfShape || "unknown";
@@ -69,6 +73,10 @@ var Shape = (function(){
 
   Shape.prototype.minInRow = function(row){
     return Math.min.apply(null, this.shape_definition.row(row));
+  };;
+
+  Shape.prototype.maxInRow = function(row){
+    return Math.max.apply(null, this.shape_definition.row(row));
   };
 
   Shape.prototype.isEqualTo = function(other_shape){
@@ -119,15 +127,14 @@ var Shape = (function(){
 
   Shape.prototype.svgRects = function(scale){
     var rects = [];
-    var xmax = 0, ymax = 0;
+    var xmax = this.maxInRow(0);
+    var ymax = this.maxInRow(1);
+
     for(var i = 0; i < this.shape_definition.columnCount(); i++){
       var x = this.shape_definition.element(0, i);
       var y = this.shape_definition.element(1, i);
       var scaledX = x * scale;
-      var scaledY = y * scale;
-
-      xmax = Math.max(xmax, x);
-      ymax = Math.max(ymax, y);
+      var scaledY = (ymax-y) * scale;
 
       rects.push({
         x: scaledX,

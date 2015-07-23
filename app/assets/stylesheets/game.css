@@ -2,7 +2,7 @@
   width: 500px;
   padding-left: 50px;
   position: fixed;
-  top: 40px;
+  top: 10px;
   left: 450px;
 }
 
@@ -27,6 +27,17 @@
 	height: 30px;
   fill: lightgray;
   stroke: darkgray;
+  overflow: hidden;
+}
+
+#log {
+  padding: 5px;
+  width: 600px;
+  height: 50px;
+  position: fixed;
+  top: 630px;
+  left: 500px;
+  border: 1px solid red;
 }
 
 #pieces {
@@ -47,23 +58,27 @@
   height: auto;
   background: lightgray;
   padding: 0px;
-  margin: 0px;
+  margin: 0px;8
 }
 
 .isomers {
-	height: auto;
-	width: auto;
+  height: auto;
+  width: auto;
 }
 
 .isomers:after {
-	clear: both;
+  clear: both;
   content: "";
   display: block;
 }
 
 .isomer {
   float: left;
-	margin: 10px;
+  margin: 10px;
+}
+
+.wide-stroke {
+  stroke-width: 7px;
 }
 
 .block-blue {
@@ -91,6 +106,9 @@
 }
 
 .over {
-	/*border: 2px dashed #000;*/
-  fill: blue;
+  fill: black;
+}
+
+.invalid-placement {
+  fill: purple;
 }

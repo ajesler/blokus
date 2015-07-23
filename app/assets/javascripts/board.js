@@ -19,7 +19,7 @@ var Board = (function(){
 
   Board.prototype.square = function(x, y, value){
     if(typeof(value) === "undefined") {
-      this.board[y][x];
+      return this.board[y][x];
     } else {
       this.board[y][x] = value;
       return this;
@@ -29,18 +29,38 @@ var Board = (function(){
   Board.prototype.forEachRow = function(callback) {
     var boundCallback = callback.bind(this);
 
-    this.board.reverse().forEach(function(row){
-      boundCallback(row);
+    var offset = this.size - 1;
+    this.board.clone().reverse().forEach(function(row, index){
+      boundCallback(row, offset - index);
     });
   };
 
   Board.prototype.forEachSquare = function(callback) {
     var boundCallback = callback.bind(this);
-    this.board.reverse().forEach(function(row, y){
+    this.board.forEach(function(row, y){
       row.forEach(function(square_contents, x){
         boundCallback(x, y, square_contents);
       });
     });
+  };
+
+  Board.prototype.coordinatesAreAllEmpty = function(coordinates) {
+    if(coordinates instanceof Array){
+      coordinates = new Matrix(coordinates);
+    }
+
+    var free = [];
+
+    for(var i = coordinates.columnCount() - 1; i >= 0; i--){
+      var point = coordinates.column(i);
+      var x = point[0];
+      var y = point[1];
+
+      var isFree = this.square(x, y) === BLANK;
+      free.push(isFree);
+    }
+
+    return free.every(function(square){ return square == true });
   };
 
   return Board;
