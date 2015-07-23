@@ -26,6 +26,79 @@ var Board = (function(){
     }
   };
 
+  var contains = function(list, element){
+    for(var i = list.length - 1; i >= 0; i--){
+      if(list[i] === element){
+        return true;
+      }
+    }
+    return false;
+  }
+
+  var pointOnBoard = function(x, y){
+    if(typeof(y) === "undefined" && x instanceof Array && x.length == 2){
+      y = x[1];
+      x = x[0];
+    }
+
+    if(x > this.size - 1) { 
+      return false
+    }
+    if(y > this.size - 1){
+      return false;
+    }
+    if(x < 0){
+      return false;
+    }
+    if(y < 0){
+      return false;
+    }
+    return true;
+  }
+
+  var allCoordinatesOnBoard = function(coordinates){
+    var allOnBoard = coordinates.columns().reduce(function(validity, currentValue){
+      var isValid = pointOnBoard(currentValue[0], currentValue[1]);
+      return validity && isValid;
+    }, true);
+
+    return allOnBoard;
+  };
+
+  var offsetSquares = function(x, y, offsets){
+    var squares = [];
+    offsets.forEach(function(point){
+      var nx = x + point[0];
+      var ny = y + point[1];
+      squares.push([nx, ny]);
+    });
+    return squares.filter(function(square){
+      return pointOnBoard(square);
+    });
+  };
+
+  var adjacentSquares = function(x, y){
+    return offsetSquares(x, y, [[0, 1], [1, 0], [0, -1], [-1, 0]]);
+  }
+
+  var adjacentCorners = function(x, y){
+    return offsetSquares(x, y, [[1, 1], [-1, 1], [1, -1], [-1, -1]]);
+  }
+
+  var touchesACornerOfSameColour = function(coordinates){
+    return true;
+  };
+
+  var doesNotTouchEdgesOfTheSameColour = function(coordinates){
+    return true;
+  }
+
+  Board.prototype.validMove = function(coordinates, playerColour) {
+    var isValid = allCoordinatesOnBoard(coordinates);
+    isValid &= this.coordinatesAreAllEmpty(coordinates);
+    return isValid;
+  };
+
   Board.prototype.forEachRow = function(callback) {
     var boundCallback = callback.bind(this);
 

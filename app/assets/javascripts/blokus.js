@@ -167,7 +167,7 @@ var Blokus = (function () {
 
   var highlightDropSquares = function(matrix){
     var messages = [];
-    var validPlacement = board.coordinatesAreAllEmpty(matrix);
+    var validPlacement = board.validMove(matrix);
     var highlightClass = validPlacement ? "over" : "invalid-placement";
     
     for(var i = matrix.columnCount() - 1; i >= 0; i--){
@@ -214,7 +214,7 @@ var Blokus = (function () {
     // delete the dragSourceElement
     dragSourceElement.remove();
     dragSourceElement = null;
-    console.log("\typiece successfully placed!")
+    console.log("\tpiece successfully placed!")
   }
 
   function handleDrop(e) {

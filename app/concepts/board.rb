@@ -40,6 +40,7 @@ class Board
 		points.each.with_object(Set.new) do |point, result_set|
 			adjacent_corners(point.x, point.y).each { |corner_point| result_set.add(corner_point) }
 		end
+		# TODO remove the original points? Will this influence the result?
 	end
 
 	private

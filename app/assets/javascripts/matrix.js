@@ -96,6 +96,16 @@ var Matrix = (function(){
     return result;
   };
 
+  Matrix.prototype.columns = function() {
+    var columns = [];
+
+    for(var i = 0; i < this.columnCount(); i++){
+      columns.push(this.column(i));
+    }
+
+    return columns;
+  };
+
   Matrix.prototype.clone = function(){
     return new Matrix(this.matrix);
   };
