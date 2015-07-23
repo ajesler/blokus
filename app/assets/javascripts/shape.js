@@ -103,8 +103,9 @@ var Shape = (function(){
       y = 0;
     }
 
-    var tmpShape = new Shape(transform.multiply(this.shape_definition)).moveToOrigin();
-    var result = new Shape(this.shape_definition.offset([x, y]));
+    var tmpShape = new Shape(transform.multiply(this.shape_definition))
+    var tmpShapeAtOrigin = tmpShape.moveToOrigin();
+    var result = new Shape(tmpShapeAtOrigin.shape_definition.offset([x, y]));
     return result;
   };
 
@@ -153,17 +154,14 @@ var Shape = (function(){
   Shape.prototype.isomers = function() {
     var isomers = [];
 
-    var shape = this;
-    Utils.forEachObjectKey(Transform.transforms(), function(key, transform){
-      // call with this?
-      var transform_applied = transform.multiply(shape.shape_definition);
-      var new_shape = new Shape(transform_applied);
-      var result = new_shape.moveToOrigin();
+    Utils.forEachKeyValue.call(this, Transform.transforms(), function(key, transform){
+      var transform_applied = transform.multiply(this.shape_definition);
+      var newShape = new Shape(transform_applied).moveToOrigin();
 
-      if(!containsIsomer(isomers, result)){
-        isomers.push(result);
+      if(!containsIsomer(isomers, newShape)){
+        isomers.push(newShape);
       }
-    });
+  });
 
     return isomers;
   };
@@ -172,8 +170,8 @@ var Shape = (function(){
   var all_shapes = {"Z4":[[0,0,1,1],[0,1,1,2]],"Z5":[[0,1,1,1,2],[0,0,1,2,2]],"N":[[0,0,1,1,1],[0,1,1,2,3]],"W":[[0,1,1,2,2],[0,0,1,1,2]],"X":[[0,1,1,2,1],[1,0,1,1,2]],"O":[[0,0,1,1],[0,1,1,0]],"1":[[0],[0]],"2":[[0,0],[0,1]],"I3":[[0,0,0],[0,1,2]],"I4":[[0,0,0,0],[0,1,2,3]],"I5":[[0,0,0,0,0],[0,1,2,3,4]],"V5":[[0,0,0,1,2],[0,1,2,2,2]],"V3":[[0,0,1],[0,1,1]],"L5":[[0,1,0,0,0],[0,0,1,2,3]],"L4":[[0,1,0,0],[0,0,1,2]],"U":[[0,1,2,0,2],[0,0,0,1,1]],"T4":[[1,0,1,2],[0,1,1,1]],"T5":[[1,1,0,1,2],[0,1,2,2,2]],"F":[[1,1,2,0,1],[0,1,1,2,2]],"P":[[0,1,0,1,0],[0,0,1,1,2]],"Y":[[0,0,0,1,0],[0,1,2,2,3]]};
 
   var shapes = {};
-  Utils.forEachObjectKey(all_shapes, function(key, value){
-    var shape = new Shape(value);
+  Utils.forEachKeyValue(all_shapes, function(key, array){
+    var shape = new Shape(array);
     shape.shapeName(key);
 
     shapes[key] = shape;

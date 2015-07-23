@@ -104,6 +104,13 @@ describe("Matrix", function() {
 
       expect(matrix.offset(offset).isEqualTo(expected)).toBe(true);
     });
+
+    it("works when the offset is 0", function(){
+      var matrix = new Matrix([[1, 2, 3, 0], [0, 5, 6, 4]]);
+      var offset = [0, 0];
+
+      expect(matrix.offset(offset).isEqualTo(matrix)).toBe(true);
+    });
   });
 
   describe("#element", function(){

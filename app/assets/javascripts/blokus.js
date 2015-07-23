@@ -16,9 +16,9 @@ var Blokus = (function () {
   var turnsLoadedCallback = function(turnsJSON){
     turns = turnsJSON;
     blokus.buildBoard();
-    blokus.initDragAndDrop();
     blokus.renderPlayerPieces();
     blokus.renderBoard();
+    blokus.initDragAndDrop();
   }
 
   blokus.init = function(gameSettings){
@@ -67,18 +67,6 @@ var Blokus = (function () {
 
   blokus.renderBoard = function(){
     Render.board(board);
-  };
-
-  blokus.initDragAndDrop = function(){
-    var pieces = document.querySelectorAll('.isomers .isomer');
-    [].forEach.call(pieces, function(piece) {
-      piece.addEventListener('dragstart', handleDragStart, false);
-      piece.addEventListener('dragenter', handleDragEnter, false);
-      piece.addEventListener('dragover', handleDragOver, false);
-      piece.addEventListener('dragleave', handleDragLeave, false);
-      piece.addEventListener('drop', handleDrop, false);
-      piece.addEventListener('dragend', handleDragEnd, false);
-    });
   };
 
   // http://www.html5rocks.com/en/tutorials/dnd/basics/
@@ -130,10 +118,30 @@ var Blokus = (function () {
   function handleDragEnd(e) {
     // this/e.target is the source node.
 
-    var pieces = document.querySelectorAll('.isomers .isomer');
+    var pieces = document.querySelectorAll('.squares .square');
     [].forEach.call(pieces, function (piece) {
       piece.classList.remove('over');
     });
+  };
+
+  blokus.initDragAndDrop = function(){
+    var pieces = document.querySelectorAll('.isomers .isomer');
+    [].forEach.call(pieces, function(piece) {
+      piece.addEventListener('dragstart', handleDragStart, false);
+      piece.addEventListener('dragenter', handleDragEnter, false);
+      piece.addEventListener('dragover', handleDragOver, false);
+      piece.addEventListener('dragleave', handleDragLeave, false);
+      piece.addEventListener('drop', handleDrop, false);
+      piece.addEventListener('dragend', handleDragEnd, false);
+    });
+
+    var squares = document.querySelectorAll('.squares .square');
+    [].forEach.call(squares, function(square){
+      square.addEventListener('dragenter', handleDragEnter, false);
+      square.addEventListener('dragover', handleDragOver, false);
+      square.addEventListener('dragleave', handleDragLeave, false);
+    });
+
   };
 
   return blokus;

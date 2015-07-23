@@ -1,10 +1,12 @@
-#board {
-	float: left;
-	max-width: 75%;
+#board {  
+  width: 500px;
+  padding-left: 50px;
+  position: fixed;
+  top: 40px;
+  left: 450px;
 }
 
 .squares {
-	
 }
 
 .squares:after{
@@ -13,27 +15,38 @@
   display: block;
 }
 
+.square-row {
+  width: 600px;
+  height: 30px;
+}
+
 .square {
-	float: left;
-	width: 20px;
-	height: 20px;
+  position: relative;
+  display: inline-block;
+	width: 30px;
+	height: 30px;
+  fill: lightgray;
+  stroke: darkgray;
 }
 
 #pieces {
-  max-width: 20%;
-  float: left;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 400px;
+  max-height: 100%;
+  overflow-y: scroll;
 }
 
 .shape {
   background: darkgray;
 }
 
-.shape div h3 {
+.shape h3 {
   color: blue;
-  width: 100%;
   height: auto;
   background: lightgray;
-  padding: 5px;
+  padding: 0px;
   margin: 0px;
 }
 
@@ -78,5 +91,6 @@
 }
 
 .over {
-	border: 2px dashed #000;
+	/*border: 2px dashed #000;*/
+  fill: blue;
 }

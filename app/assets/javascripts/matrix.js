@@ -23,6 +23,10 @@ var Matrix = (function(){
     }
   };
 
+  Array.prototype.clone = function(){
+    return arrayClone(this);
+  }
+
   // from http://stackoverflow.com/questions/7837456/comparing-two-arrays-in-javascript
   // attach the .isEqualTo method to Array's prototype to call it on any array
   Array.prototype.isEqualTo = function (array) {

@@ -1,33 +1,43 @@
 var Render = (function(){
 	var render = {};
-  var SCALE = 20;
+  var SCALE = 30;
   var SVG_NS = "http://www.w3.org/2000/svg";
 
   render.board = function(board){
   	var boardContainer = document.getElementById("board");
 
-    board.forEachSquare(function(x, y, value){
-      // render square
-      render.boardSquare()
+    var squaresContainer = document.createElement("div");
+    squaresContainer.setAttribute("class", "squares");
+
+    board.forEachRow(function(row){
+      var squareRowContainer = document.createElement("div");
+      squareRowContainer.setAttribute("class", "square-row");
+
+      row.forEach(function(square){
+        var square = render.boardSquare(square);
+        squareRowContainer.appendChild(square);
+      });
+
+      squaresContainer.appendChild(squareRowContainer);
     });
+
+    boardContainer.appendChild(squaresContainer);
   };
 
   render.boardSquare = function(colour){
-
   	var svg = document.createElementNS(SVG_NS, "svg");
-    svg.setAttribute("width", SCALE);
-    svg.setAttribute("height", SCALE);
     
     var svgRect = document.createElementNS(SVG_NS, "rect");
-    svgRect.setAttribute("x", rect.x);
-    svgRect.setAttribute("y", rect.y);
-    svgRect.setAttribute("width", rect.width);
-    svgRect.setAttribute("height", rect.height);
+    svgRect.setAttribute("width", SCALE);
+    svgRect.setAttribute("height", SCALE);
     svg.appendChild(svgRect);
 
     var svgDiv = document.createElement("div");
-    svgDiv.setAttribute("draggable", "true");
-    svgDiv.setAttribute("class", "isomer block-"+colour);
+    var classString = "square";
+    if(colour !== "") {
+      classString += " block-"+colour;
+    }
+    svgDiv.setAttribute("class", classString);
     svgDiv.appendChild(svg);
 
     return svgDiv;
@@ -82,7 +92,7 @@ var Render = (function(){
   
   render.playerPieces = function(container, colour) {
     var shapes = Shape.shapes();
-    Utils.forEachObjectKey(shapes, function(key, shape){
+    Utils.forEachKeyValue(shapes, function(key, shape){
       var shapeContainer = render.shape(shape, colour);
       container.appendChild(shapeContainer);
     });

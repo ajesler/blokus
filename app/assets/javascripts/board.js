@@ -19,7 +19,6 @@ var Board = (function(){
 
   Board.prototype.square = function(x, y, value){
     if(typeof(value) === "undefined") {
-      // get value
       this.board[y][x];
     } else {
       this.board[y][x] = value;
@@ -27,12 +26,19 @@ var Board = (function(){
     }
   };
 
+  Board.prototype.forEachRow = function(callback) {
+    var boundCallback = callback.bind(this);
+
+    this.board.reverse().forEach(function(row){
+      boundCallback(row);
+    });
+  };
+
   Board.prototype.forEachSquare = function(callback) {
-    var context = this;
-    this.board.forEach(function(row, y){
-      row.forEach(function(square, x){
-        var value = context.square(x, y);
-        callback.call(context, x, y, value);
+    var boundCallback = callback.bind(this);
+    this.board.reverse().forEach(function(row, y){
+      row.forEach(function(square_contents, x){
+        boundCallback(x, y, square_contents);
       });
     });
   };

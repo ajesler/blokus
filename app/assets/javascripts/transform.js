@@ -37,8 +37,8 @@ var Transform = (function(){
   };
 
   var transformMatricies = {};
-  Utils.forEachObjectKey(transforms, function(key, value){
-    var matrix = new Matrix(value);
+  Utils.forEachKeyValue(transforms, function convertIntoMatrix(key, array) {
+    var matrix = new Matrix(array);
     transformMatricies[key] = matrix;
   });
 
