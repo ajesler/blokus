@@ -106,6 +106,10 @@ var Matrix = (function(){
     return columns;
   };
 
+  Matrix.prototype.rows = function() {
+    return this.matrix.clone();
+  };
+
   Matrix.prototype.clone = function(){
     return new Matrix(this.matrix);
   };

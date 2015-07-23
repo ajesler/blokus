@@ -2,6 +2,31 @@
 var Utils = (function(){
   var utils = {};
 
+  // Array Remove - By John Resig (MIT Licensed)
+  Array.prototype.remove = function(from, to) {
+    var rest = this.slice((to || from) + 1 || this.length);
+    this.length = from < 0 ? this.length + from : from;
+    return this.push.apply(this, rest);
+  };
+
+  utils.containsElement = function(array, element){
+    for(var i = array.length - 1; i >= 0; i--){
+      if(array[i] === element){
+        return true;
+      }
+    }
+    return false;
+  }
+
+  utils.removeElement = function(array, element){
+    for(var i = array.length - 1; i >= 0; i--){
+      if(array[i] === element){
+        array.remove(i);
+        break;
+      }
+    }
+  }
+
   utils.forEachKeyValue = function(object, callback) {
     var callbackWithContext = callback.bind(this);
 

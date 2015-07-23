@@ -98,14 +98,12 @@ var Blokus = (function () {
 
     var coordinates = getPieceCoverage(e);    
     highlightDropSquares(coordinates);
-    console.log("handleDragEnter "+coordinates.matrix.join(", "));
   };
 
   var handleDragLeave = function(e) {
     // this.classList.remove('over');  // this / e.target is previous target element.
     var coordinates = getPieceCoverage(e);
     unhighlightDropSquares(coordinates);
-    console.log("handleDragLeave "+coordinates.matrix.join(", "));
   };
 
   var getXAndY = function(e){
@@ -167,7 +165,7 @@ var Blokus = (function () {
 
   var highlightDropSquares = function(matrix){
     var messages = [];
-    var validPlacement = board.validMove(matrix);
+    var validPlacement = board.validMove(matrix, settings.playerColour);
     var highlightClass = validPlacement ? "over" : "invalid-placement";
     
     for(var i = matrix.columnCount() - 1; i >= 0; i--){
@@ -230,23 +228,12 @@ var Blokus = (function () {
       // if the target is a square, allow it
       var coordinates = getPieceCoverage(e);
       console.log("attempting to place shape at "+coordinates.matrix.join(" | "));
-      if(board.coordinatesAreAllEmpty(coordinates)){
+      
+      if(board.validMove(coordinates, settings.playerColour)){
         placePiece(coordinates);
       } else {
-        console.log("\tcannot place piece, not all coordinates are empty")
-        for(var i = coordinates.columnCount() - 1; i >= 0; i--){
-          var point = coordinates.column(i);
-          var x = point[0];
-          var y = point[1];
-          if(board.square(x, y) !== EMPTY){
-            console.log("Square at "+x+", "+y+" is not empty, contains "+board.square(x, y));
-          }
-        }
+        console.log("\tcannot place piece - not a valid move");
       }
-
-      // Set the source column's HTML to the HTML of the column we dropped on.
-      // dragSourceElement.innerHTML = this.innerHTML;
-      // this.innerHTML = e.dataTransfer.getData('text/html');
     }
 
     return false;
@@ -266,9 +253,9 @@ var Blokus = (function () {
     var pieces = document.querySelectorAll('.isomers .isomer');
     [].forEach.call(pieces, function(piece) {
       piece.addEventListener('dragstart', handleDragStart, false);
-      piece.addEventListener('dragenter', handleDragEnter, false);
-      piece.addEventListener('dragover', handleDragOver, false);
-      piece.addEventListener('dragleave', handleDragLeave, false);
+      // piece.addEventListener('dragenter', handleDragEnter, false);
+      // piece.addEventListener('dragover', handleDragOver, false);
+      // piece.addEventListener('dragleave', handleDragLeave, false);
       piece.addEventListener('drop', handleDrop, false);
       piece.addEventListener('dragend', handleDragEnd, false);
     });

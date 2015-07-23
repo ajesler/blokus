@@ -26,15 +26,6 @@ var Board = (function(){
     }
   };
 
-  var contains = function(list, element){
-    for(var i = list.length - 1; i >= 0; i--){
-      if(list[i] === element){
-        return true;
-      }
-    }
-    return false;
-  }
-
   var pointOnBoard = function(x, y){
     if(typeof(y) === "undefined" && x instanceof Array && x.length == 2){
       y = x[1];
@@ -85,17 +76,68 @@ var Board = (function(){
     return offsetSquares(x, y, [[1, 1], [-1, 1], [1, -1], [-1, -1]]);
   }
 
-  var touchesACornerOfSameColour = function(coordinates){
-    return true;
+  var touchesACornerOfSameColour = function(coordinates, colour){
+    var cornerCoords = [];
+    coordinates.columns().forEach(function(column, index){
+      var corners = adjacentCorners(column[0], column[1]);
+
+      corners.forEach(function(point){
+        if(!Utils.containsElement(cornerCoords, point)){
+          cornerCoords.push(point);
+        }
+      });
+    });
+
+    coordinates.columns().forEach(function(point){
+      if(Utils.containsElement(cornerCoords, point)){
+        Utils.removeElement(point);
+      }
+    });
+
+    var board = this;
+    return cornerCoords.map(function(point){
+      return board.square(point[0], point[1]) === colour;
+    }).some(function(result){
+      return result == true
+    });
   };
 
-  var doesNotTouchEdgesOfTheSameColour = function(coordinates){
-    return true;
+  var doesNotTouchEdgesOfTheSameColour = function(coordinates, colour){
+    var adjacentCoords = [];
+
+    coordinates.columns().forEach(function(column){
+      var adjacent = adjacentSquares(column[0], column[1]);
+
+      adjacent.forEach(function(point){
+        if(!Utils.containsElement(adjacentCoords, point)){
+          adjacentCoords.push(point);
+        }
+      });
+    });
+
+    coordinates.columns().forEach(function(point){
+      if(Utils.containsElement(adjacentCoords, point)){
+        Utils.removeElement(point);
+      }
+    });
+
+    var board = this;
+    var touchesEdge = adjacentCoords.map(function(point){
+      return board.square(point[0], point[1]) === colour;
+    }).some(function(result){
+      return result === true
+    });
+
+    return !touchesEdge;
   }
 
   Board.prototype.validMove = function(coordinates, playerColour) {
-    var isValid = allCoordinatesOnBoard(coordinates);
-    isValid &= this.coordinatesAreAllEmpty(coordinates);
+    var onBoard = allCoordinatesOnBoard(coordinates);
+    var areEmpty = this.coordinatesAreAllEmpty(coordinates);
+    var touchesCorner = touchesACornerOfSameColour.call(this, coordinates, playerColour);
+    var noSharedEdges = doesNotTouchEdgesOfTheSameColour.call(this, coordinates, playerColour);
+
+    var isValid = onBoard && areEmpty && touchesCorner && noSharedEdges;
     return isValid;
   };
 
