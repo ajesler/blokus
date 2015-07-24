@@ -58,28 +58,33 @@ var Board = (function(){
 
   var offsetSquares = function(x, y, offsets){
     var squares = [];
+
     offsets.forEach(function(point){
       var nx = x + point[0];
       var ny = y + point[1];
       squares.push([nx, ny]);
     });
-    return squares.filter(function(square){
-      return pointOnBoard(square);
+
+    var self = this;
+    var validSquares = squares.filter(function(square){
+      return pointOnBoard.call(self, square);
     });
+    return validSquares;
   };
 
   var adjacentSquares = function(x, y){
-    return offsetSquares(x, y, [[0, 1], [1, 0], [0, -1], [-1, 0]]);
+    return offsetSquares.call(this, x, y, [[0, 1], [1, 0], [0, -1], [-1, 0]]);
   }
 
   var adjacentCorners = function(x, y){
-    return offsetSquares(x, y, [[1, 1], [-1, 1], [1, -1], [-1, -1]]);
+    return offsetSquares.call(this, x, y, [[1, 1], [-1, 1], [1, -1], [-1, -1]]);
   }
 
   var touchesACornerOfSameColour = function(coordinates, colour){
     var cornerCoords = [];
+    var self = this;
     coordinates.columns().forEach(function(column, index){
-      var corners = adjacentCorners(column[0], column[1]);
+      var corners = adjacentCorners.call(self, column[0], column[1]);
 
       corners.forEach(function(point){
         if(!Utils.containsElement(cornerCoords, point)){
@@ -105,8 +110,9 @@ var Board = (function(){
   var doesNotTouchEdgesOfTheSameColour = function(coordinates, colour){
     var adjacentCoords = [];
 
+    var self = this;
     coordinates.columns().forEach(function(column){
-      var adjacent = adjacentSquares(column[0], column[1]);
+      var adjacent = adjacentSquares.call(self, column[0], column[1]);
 
       adjacent.forEach(function(point){
         if(!Utils.containsElement(adjacentCoords, point)){
