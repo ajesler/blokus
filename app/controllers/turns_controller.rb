@@ -1,5 +1,6 @@
 class TurnsController < ApplicationController
 	before_action :load_game
+	before_action :load_player
 
 	def index
 		@turns = @game.turns.play_order
@@ -9,7 +10,7 @@ class TurnsController < ApplicationController
 		create_turn_params = CreateTurnFormObject.new(params)
 
 		if create_turn_params.valid?
-			created = PlayPiece.new(@game, create_turn_params.player, create_turn_params.coordinates)
+			created = PlayPiece.new(@game, @player, create_turn_params.coordinates).call
 			if created
 				# TODO respond positively
 			else
@@ -21,6 +22,10 @@ class TurnsController < ApplicationController
 	end
 
 	private
+
+	def load_player
+		@player = current_user.players.find_by!(game_id: game_id)
+	end
 
 	def load_game
 		@game = current_user.games.find_by!(id: game_id)

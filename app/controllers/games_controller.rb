@@ -5,10 +5,14 @@ class GamesController < ApplicationController
 
 	def show
 		load_game
-		# TODO implement this
-		@active_colour = "green"
-		@player_colour = "green"
+		load_player
+
+		@active_colour = @game.active_colour
+		# TODO
+		@is_players_turn = true #@game.active_player == @player
+
 		@turns_url = game_turns_path(@game)
+		@player_id = current_user.players.find_by!(game: game_id).id
 
 		respond_to do |format|
 			format.json { render json: @game }
@@ -29,7 +33,6 @@ class GamesController < ApplicationController
 				form_object.player_two_user_id, 
 				form_object.player_three_user_id, 
 				form_object.player_four_user_id).call
-
 			redirect_to new_game
 		else
 			flash[:error] = "You must select three different players to join the game"
@@ -38,6 +41,10 @@ class GamesController < ApplicationController
 	end
 
 	private 
+
+	def load_player
+		@player = current_user.players.find_by!(game_id: @game.id)
+	end
 
 	def load_game
 		@game = current_user.games.find_by!(id: game_id)

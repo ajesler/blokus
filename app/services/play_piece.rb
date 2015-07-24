@@ -8,6 +8,8 @@ class PlayPiece
 	end
 
 	def call
+		# TODO check if it is players turn
+
 		@piece = MatrixConversions.from_point_array(@coordinates)
 
 		# TODO rename identification

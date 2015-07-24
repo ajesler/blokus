@@ -27,7 +27,12 @@ var Blokus = (function () {
     settings = gameSettings;
 
     blokus.loadTurns();
-  }
+  };
+
+  blokus.reload = function(){
+    // TODO GAHHH
+    window.location.reload();
+  };
 
   blokus.loadTurns = function() {
     var request = new XMLHttpRequest();
@@ -66,12 +71,12 @@ var Blokus = (function () {
     var piecesContainer = document.getElementById("pieces");
 
     var usedShapes = turns.filter(function(turn, index){
-      return PLAYER_COLOURS.indexOf(settings.playerColour) == index % 4
+      return PLAYER_COLOURS.indexOf(settings.activeColour) == index % 4
     }).map(function(turn){
       return turn.shape;
     });
 
-    return Render.playerPieces(piecesContainer, settings.playerColour, usedShapes);
+    return Render.playerPieces(piecesContainer, settings.isPlayersTurn, settings.activeColour, usedShapes);
   };
 
   blokus.renderBoard = function(){
@@ -80,7 +85,7 @@ var Blokus = (function () {
 
   // http://www.html5rocks.com/en/tutorials/dnd/basics/
   var handleDragStart = function(e) {
-    this.style.opacity = '0.4';  // this / e.target is the source node.
+    // this / e.target is the source node.
 
     dragSourceElement = this;
 
@@ -141,7 +146,7 @@ var Blokus = (function () {
   var highlightDropSquares = function(){
     if(pieceCoords != null){
       var messages = [];
-      var validPlacement = board.validMove(pieceCoords, settings.playerColour);
+      var validPlacement = board.validMove(pieceCoords, settings.activeColour);
       var highlightClass = validPlacement ? "over" : "invalid-placement";
       
       for(var i = pieceCoords.columnCount() - 1; i >= 0; i--){
@@ -167,22 +172,31 @@ var Blokus = (function () {
   }
 
   var placePiece = function(){
-    var matrix = pieceCoords.clone();
-    pieceCoords = null;
-
     unhighlightDropSquares();
 
-    for(var i = matrix.columnCount() - 1; i >= 0; i--){
-      var point = matrix.column(i);
+    for(var i = pieceCoords.columnCount() - 1; i >= 0; i--){
+      var point = pieceCoords.column(i);
       var square = getSquare(point[0], point[1]);
 
-      square.classList.add("wide-stroke", "block-"+settings.playerColour);
-      board.square(point[0], point[1], settings.playerColour);
+      square.classList.add("wide-stroke", "block-"+settings.activeColour);
+      board.square(point[0], point[1], settings.activeColour);
     }
+  }
 
-    // delete the dragSourceElement
-    dragSourceElement.remove();
-    dragSourceElement = null;
+  var disableIsomerDragging = function(){
+    var isomers = document.querySelectorAll(".isomers .isomer");
+    for(var i = 0; i < isomers.length; i++){
+      isomers[i].setAttribute("draggable", "false");
+      isomers[i].style.cursor = "no-drop";
+    }
+  };
+
+  var enableIsomerDragging = function(){
+    var isomers = document.querySelectorAll(".isomers .isomer");
+    for(var i = 0; i < isomers.length; i++){
+      isomers[i].setAttribute("draggable", "true");
+      isomers[i].style.cursor = "move";
+    }
   }
 
   function handleDrop(e) {
@@ -194,12 +208,14 @@ var Blokus = (function () {
 
     // Don't do anything if dropping the same column we're dragging.
     if (dragSourceElement != this) {
-
-      // if the target is a square, allow it
       var coordinates = getPieceCoverage(e);
       
-      if(board.validMove(coordinates, settings.playerColour)){
+      if(board.validMove(coordinates, settings.activeColour)){
         placePiece(coordinates);
+        disableIsomerDragging();
+
+        clearControls();
+        createControls();
       }
     }
 
@@ -226,7 +242,80 @@ var Blokus = (function () {
       square.addEventListener('dragover', handleDragOver, false);
       square.addEventListener('dragleave', handleDragLeave, false);
     });
+  };
 
+  var createButton = function(value) {
+    var button = document.createElement("input");
+    button.type = "button";
+    button.value = value;
+
+    return button;
+  };
+
+  var resetButtonAction = function(){
+    blokus.revertMove();
+  }
+
+  var saveButtonAction = function(){
+    var formData = new FormData();
+
+    for(var i = pieceCoords.columnCount() - 1; i >= 0; i--){
+      var point = pieceCoords.column(i);
+      formData.append("coordinates[]", point[0]+","+point[1]);
+    }
+
+    formData.append("player_id", settings.playerID);
+
+    var xhr = new XMLHttpRequest();
+
+    xhr.addEventListener('load', function(event){
+      blokus.reload();
+    });
+    // TODO handle xhr error
+
+    xhr.open('POST', settings.turnsURL);
+    var CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]').attributes.content.value;
+    xhr.setRequestHeader('X-CSRF-Token', CSRF_TOKEN);
+
+    xhr.send(formData)
+  };
+
+  var createControls = function(){
+    var controls = document.getElementById("controls");
+
+    // reset button
+    var resetButton = createButton("reset");
+    resetButton.onclick = resetButtonAction;
+
+    var saveButton = createButton("save");
+    saveButton.onclick = saveButtonAction;
+
+    controls.appendChild(resetButton);
+    controls.appendChild(saveButton);
+  };
+
+  var clearControls = function(){
+    var controls = document.getElementById("controls");
+    while (controls.firstChild){
+      controls.removeChild(controls.firstChild);
+    }
+  };
+
+  blokus.revertMove = function(){
+    enableIsomerDragging();
+
+    clearControls();
+
+    // revert the board square styling
+    for(var i = pieceCoords.columnCount() - 1; i >= 0; i--){
+      var point = pieceCoords.column(i);
+      var square = getSquare(point[0], point[1]);
+
+      square.setAttribute("class", "square");
+      board.square(point[0], point[1], EMPTY);
+    }
+
+    pieceCoords = null;
   };
 
   return blokus;

@@ -7,4 +7,6 @@ class Player < ActiveRecord::Base
   validates :user, :game, presence: true
 
   delegate :name, to: :user
+
+  scope :play_order, -> { order(id: :asc) }
 end

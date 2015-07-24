@@ -1,3 +1,12 @@
+#controls {
+  padding: 5px;
+  width: 600px;
+  height: 25px;
+  position: fixed;
+  top: 630px;
+  left: 500px;
+}
+
 #board {  
   width: 500px;
   padding-left: 50px;

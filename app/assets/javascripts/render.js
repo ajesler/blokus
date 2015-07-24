@@ -98,16 +98,18 @@ var Render = (function(){
     return shapeContainer;
   };
   
-  render.playerPieces = function(container, colour, usedShapes) {
-    var shapes = Shape.shapes();
-    Utils.forEachKeyValue(shapes, function(key, shape){
-      if(!Utils.containsElement(usedShapes, key))
-      {
-        var shapeContainer = render.shape(shape, colour);
-        container.appendChild(shapeContainer); 
-      }
-    });
+  render.playerPieces = function(container, isPlayersTurn, colour, usedShapes) {
+    if(isPlayersTurn){
+      var shapes = Shape.shapes();
+      Utils.forEachKeyValue(shapes, function(key, shape){
+        if(!Utils.containsElement(usedShapes, key))
+        {
+          var shapeContainer = render.shape(shape, colour);
+          container.appendChild(shapeContainer); 
+        }
+      });
+    }
   };
 
-	return render;
+  return render;
 })();

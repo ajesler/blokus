@@ -11,4 +11,14 @@ class Game < ActiveRecord::Base
 	def colours
 		Colours.colours
 	end
+
+  def active_colour
+    player_index = turns.size % 4
+    colours[player_index]
+  end
+
+  def active_player
+    player_index = turns.size % 4
+    players.play_order[player_index]
+  end
 end
