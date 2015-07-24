@@ -98,8 +98,8 @@ var Render = (function(){
     return shapeContainer;
   };
   
-  render.playerPieces = function(container, isPlayersTurn, colour, usedShapes) {
-    if(isPlayersTurn){
+  render.playerPieces = function(container, isPlayerTurn, colour, usedShapes) {
+    if(isPlayerTurn){
       var shapes = Shape.shapes();
       Utils.forEachKeyValue(shapes, function(key, shape){
         if(!Utils.containsElement(usedShapes, key))

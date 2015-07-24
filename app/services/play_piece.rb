@@ -1,6 +1,7 @@
 require 'matrix'
 
 class PlayPiece
+	# TODO just pass player, dont need game
 	def initialize(game, player, coordinates)
 		@game = game
 		@player = player
@@ -9,7 +10,14 @@ class PlayPiece
 
 	def call
 		# TODO check if it is players turn
+		if @game.active_player != @player
+			return false
+		end
 
+		if @coordinates.empty?
+			@player.turns.create!(shape: nil, transform: nil, x: nil, y: nil)
+			return true
+		end
 		@piece = MatrixConversions.from_point_array(@coordinates)
 
 		# TODO rename identification
@@ -52,6 +60,7 @@ class PlayPiece
 		valid
 	end
 
+	# TODO make Roger happy
 	def is_colours_first_turn?
 		@game.turns.play_order.each.with_index do |turn, index|
 			turn_colour = @game.colours[index % @game.colours.length]

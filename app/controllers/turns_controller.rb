@@ -1,6 +1,6 @@
 class TurnsController < ApplicationController
-	before_action :load_game
 	before_action :load_player
+	before_action :load_game
 
 	def index
 		@turns = @game.turns.play_order
@@ -28,7 +28,7 @@ class TurnsController < ApplicationController
 	end
 
 	def load_game
-		@game = current_user.games.find_by!(id: game_id)
+		@game = @player.game
 	end
 
 	def game_id

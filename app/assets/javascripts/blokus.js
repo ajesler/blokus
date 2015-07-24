@@ -1,4 +1,4 @@
-var Blokus = (function () {
+var Blokus = (function() {
   var RED = "red";
   var GREEN = "green";
   var BLUE = "blue";
@@ -15,7 +15,7 @@ var Blokus = (function () {
 
   var pieceCoords = null;
 
-  var turnsLoadedCallback = function(turnsJSON){
+  var turnsLoadedCallback = function(turnsJSON) {
     turns = turnsJSON;
     blokus.buildBoard();
     blokus.renderPlayerPieces();
@@ -23,14 +23,13 @@ var Blokus = (function () {
     blokus.initDragAndDrop();
   }
 
-  blokus.init = function(gameSettings){
+  blokus.init = function(gameSettings) {
     settings = gameSettings;
 
     blokus.loadTurns();
   };
 
   blokus.reload = function(){
-    // TODO GAHHH
     window.location.reload();
   };
 
@@ -51,25 +50,29 @@ var Blokus = (function () {
     request.send(null);
   };
 
-  blokus.buildBoard = function(){
+  blokus.buildBoard = function() {
     board = new Board();
 
-    turns.forEach(function(turn, index){
+    turns.forEach(function(turn, index) {
       var colour = PLAYER_COLOURS[index % 4];
 
-      transform = Transform.transforms(turn.transform);
-      shape = Shape.shapes(turn.shape);
-      var positionedShape = shape.transform(transform, turn.x, turn.y);
+      var passed = false; // TODO
+      if (!passed) {
+        transform = Transform.transforms(turn.transform);
+        shape = Shape.shapes(turn.shape);
+        var positionedShape = shape.transform(transform, turn.x, turn.y);
 
-      positionedShape.eachPoint(function(x, y){
-        board.square(x, y, colour);
-      });
+        positionedShape.eachPoint(function(x, y){
+          board.square(x, y, colour);
+        });
+      }
     });
   };
 
-  blokus.renderPlayerPieces = function(){
+  blokus.renderPlayerPieces = function() {
     var piecesContainer = document.getElementById("pieces");
 
+    // TODO extract into function - eg shapesUserHasPlayed
     var usedShapes = turns.filter(function(turn, index){
       return PLAYER_COLOURS.indexOf(settings.activeColour) == index % 4
     }).map(function(turn){
@@ -90,7 +93,6 @@ var Blokus = (function () {
     dragSourceElement = this;
 
     e.dataTransfer.effectAllowed = 'move';
-    e.dataTransfer.setData('text/html', this.innerHTML);
   };
 
   var handleDragOver = function(e) {
@@ -116,6 +118,7 @@ var Blokus = (function () {
     highlightDropSquares();
   };
 
+  // rename function and change e -> element
   var getXAndY = function(e){
     var x = JSON.parse(e.getAttribute("data-x"));
     var y = JSON.parse(e.getAttribute("data-y"));
@@ -124,9 +127,7 @@ var Blokus = (function () {
   }
 
   var getCoordinates = function(e){
-    var coordinates = JSON.parse(e.getAttribute("data-coordinates"));
-
-    return coordinates;
+    return JSON.parse(e.getAttribute("data-coordinates"));
   }
 
   var getSquare = function(x, y){
@@ -144,8 +145,9 @@ var Blokus = (function () {
   }
 
   var highlightDropSquares = function(){
-    if(pieceCoords != null){
+    if(pieceCoords !== null){
       var messages = [];
+      // TODO rename validMove -> isValidMove
       var validPlacement = board.validMove(pieceCoords, settings.activeColour);
       var highlightClass = validPlacement ? "over" : "invalid-placement";
       
@@ -228,6 +230,7 @@ var Blokus = (function () {
   };
 
   blokus.initDragAndDrop = function(){
+    // TODO remove the forEach hack
     var pieces = document.querySelectorAll('.isomers .isomer');
     [].forEach.call(pieces, function(piece) {
       piece.addEventListener('dragstart', handleDragStart, false);
@@ -274,6 +277,7 @@ var Blokus = (function () {
     // TODO handle xhr error
 
     xhr.open('POST', settings.turnsURL);
+    // rename CSRF_TOKEN - not a constant
     var CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]').attributes.content.value;
     xhr.setRequestHeader('X-CSRF-Token', CSRF_TOKEN);
 
