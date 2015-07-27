@@ -1,15 +1,19 @@
 one:
   user: one
   game: one
+  created_at: <%= 99.minutes.ago.to_s :db %>
 
 two:
   user: two
   game: one
+  created_at: <%= 98.minutes.ago.to_s :db %>
 
 three:
   user: three
   game: one
+  created_at: <%= 97.minutes.ago.to_s :db %>
 
 four:
   user: four
   game: one
+  created_at: <%= 96.minutes.ago.to_s :db %>

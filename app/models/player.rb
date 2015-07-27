@@ -8,5 +8,5 @@ class Player < ActiveRecord::Base
 
   delegate :name, to: :user
 
-  scope :play_order, -> { order(id: :asc) }
+  scope :play_order, -> { order(created_at: :asc, id: :asc) }
 end
