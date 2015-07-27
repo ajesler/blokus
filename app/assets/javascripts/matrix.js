@@ -131,15 +131,12 @@ var Matrix = (function(){
 
     this.matrix.forEach(function(row, row_index) {
       for(var column_index = 0; column_index < other_matrix.columnCount(); column_index++) {
-
         column = other_matrix.column(column_index);
 
         var product = 0;
-
         column.forEach(function(element, index){
           product += element * row[index];
         });
-
         result.element(row_index, column_index, product);
       }
     });
@@ -147,7 +144,6 @@ var Matrix = (function(){
     return result;
   };
 
-  // TODO rename this
   Matrix.prototype.offset = function(offset_column){
     result = this.clone();
 

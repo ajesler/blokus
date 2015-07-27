@@ -56,7 +56,7 @@ var Blokus = (function() {
     turns.forEach(function(turn, index) {
       var colour = PLAYER_COLOURS[index % 4];
 
-      var passed = false; // TODO
+      var passed = turn.shape === null || turn.transform === null;
       if (!passed) {
         transform = Transform.transforms(turn.transform);
         shape = Shape.shapes(turn.shape);
@@ -69,24 +69,28 @@ var Blokus = (function() {
     });
   };
 
-  blokus.renderPlayerPieces = function() {
-    var piecesContainer = document.getElementById("pieces");
-
-    // TODO extract into function - eg shapesUserHasPlayed
-    var usedShapes = turns.filter(function(turn, index){
+  var shapesUserHasPlayed = function(all_turns) {
+    var usedShapes = all_turns.filter(function(turn, index){
       return PLAYER_COLOURS.indexOf(settings.activeColour) == index % 4
     }).map(function(turn){
       return turn.shape;
     });
 
-    return Render.playerPieces(piecesContainer, settings.isPlayersTurn, settings.activeColour, usedShapes);
+    return usedShapes;
+  };
+
+  blokus.renderPlayerPieces = function() {
+    var piecesContainer = document.getElementById("pieces");
+
+    var shapesUsed = shapesUserHasPlayed(turns);
+
+    return Render.playerPieces(piecesContainer, settings.isPlayersTurn, settings.activeColour, shapesUsed);
   };
 
   blokus.renderBoard = function(){
     Render.board(board);
   };
 
-  // http://www.html5rocks.com/en/tutorials/dnd/basics/
   var handleDragStart = function(e) {
     // this / e.target is the source node.
 
@@ -147,8 +151,7 @@ var Blokus = (function() {
   var highlightDropSquares = function(){
     if(pieceCoords !== null){
       var messages = [];
-      // TODO rename validMove -> isValidMove
-      var validPlacement = board.validMove(pieceCoords, settings.activeColour);
+      var validPlacement = board.isValidMove(pieceCoords, settings.activeColour);
       var highlightClass = validPlacement ? "over" : "invalid-placement";
       
       for(var i = pieceCoords.columnCount() - 1; i >= 0; i--){
@@ -212,7 +215,7 @@ var Blokus = (function() {
     if (dragSourceElement != this) {
       var coordinates = getPieceCoverage(e);
       
-      if(board.validMove(coordinates, settings.activeColour)){
+      if(board.isValidMove(coordinates, settings.activeColour)){
         placePiece(coordinates);
         disableIsomerDragging();
 
@@ -230,21 +233,21 @@ var Blokus = (function() {
   };
 
   blokus.initDragAndDrop = function(){
-    // TODO remove the forEach hack
     var pieces = document.querySelectorAll('.isomers .isomer');
-    [].forEach.call(pieces, function(piece) {
-      piece.addEventListener('dragstart', handleDragStart, false);
-      piece.addEventListener('drop', handleDrop, false);
-      piece.addEventListener('dragend', handleDragEnd, false);
-    });
+    for(var i = 0; i < pieces.length; i++){
+      pieces[i].addEventListener('dragstart', handleDragStart, false);
+      pieces[i].addEventListener('drop', handleDrop, false);
+      pieces[i].addEventListener('dragend', handleDragEnd, false);
+    }
 
     var squares = document.querySelectorAll('.squares .square');
-    [].forEach.call(squares, function(square){
-      square.addEventListener('drop', handleDrop, false);
-      square.addEventListener('dragenter', handleDragEnter, false);
-      square.addEventListener('dragover', handleDragOver, false);
-      square.addEventListener('dragleave', handleDragLeave, false);
-    });
+    for(var i = 0; i < squares.length; i++){
+      squares[i].addEventListener('drop', handleDrop, false);
+      squares[i].addEventListener('dragenter', handleDragEnter, false);
+      squares[i].addEventListener('dragover', handleDragOver, false);
+      squares[i].addEventListener('dragleave', handleDragLeave, false);
+      
+    }
   };
 
   var createButton = function(value) {
@@ -274,12 +277,10 @@ var Blokus = (function() {
     xhr.addEventListener('load', function(event){
       blokus.reload();
     });
-    // TODO handle xhr error
 
     xhr.open('POST', settings.turnsURL);
-    // rename CSRF_TOKEN - not a constant
-    var CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]').attributes.content.value;
-    xhr.setRequestHeader('X-CSRF-Token', CSRF_TOKEN);
+    var csrf_token = document.querySelector('meta[name="csrf-token"]').attributes.content.value;
+    xhr.setRequestHeader('X-CSRF-Token', csrf_token);
 
     xhr.send(formData)
   };
@@ -287,7 +288,6 @@ var Blokus = (function() {
   var createControls = function(){
     var controls = document.getElementById("controls");
 
-    // reset button
     var resetButton = createButton("reset");
     resetButton.onclick = resetButtonAction;
 
@@ -310,7 +310,6 @@ var Blokus = (function() {
 
     clearControls();
 
-    // revert the board square styling
     for(var i = pieceCoords.columnCount() - 1; i >= 0; i--){
       var point = pieceCoords.column(i);
       var square = getSquare(point[0], point[1]);

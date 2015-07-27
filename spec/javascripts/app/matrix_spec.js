@@ -49,6 +49,24 @@ describe("Matrix", function() {
     });
   });
 
+  describe("#rows", function(){
+    it("returns the matrix rows as an array", function(){
+      var matrix = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
+      var rows = [[1, 2, 3], [4, 5, 6], [7, 8, 9]];
+
+      expect(matrix.rows()).toEqual(rows);
+    });
+  });
+
+  describe("#columns", function(){
+    it("returns the matrix columns as an array", function(){
+      var matrix = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
+      var columns = [[1, 4, 7], [2, 5, 8], [3, 6, 9]];
+
+      expect(matrix.columns()).toEqual(columns);
+    });
+  });
+
   describe("#clone", function(){
     it("creates a new matrix that has the same elements", function(){
       var matrix = new Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);

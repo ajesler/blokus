@@ -137,7 +137,7 @@ var Board = (function(){
     return !touchesEdge;
   }
 
-  Board.prototype.validMove = function(coordinates, playerColour) {
+  Board.prototype.isValidMove = function(coordinates, playerColour) {
     var onBoard = allCoordinatesOnBoard(coordinates);
     var areEmpty = this.coordinatesAreAllEmpty(coordinates);
     var touchesCorner = touchesACornerOfSameColour.call(this, coordinates, playerColour);
