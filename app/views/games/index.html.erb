@@ -14,11 +14,11 @@
 	</thead>
 	<% @lobby.games.each do |game| %>
 		<tr>
-			<td><%= link_to 'Play', show_game_path(:id => game.id) %></td>
-			<td><%= game.player_one %></td>
-			<td><%= game.player_two %></td>
-			<td><%= game.player_three %></td>
-			<td><%= game.player_four %></td>
+			<td><%= link_to 'Play', game_path(game) %></td>
+			<td><%= game.players[0].name %></td>
+			<td><%= game.players[1].name %></td>
+			<td><%= game.players[2].name %></td>
+			<td><%= game.players[3].name %></td>
 		</tr>
 	<% end %>
 </table>
