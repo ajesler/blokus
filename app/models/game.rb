@@ -13,8 +13,8 @@ class Game < ActiveRecord::Base
 	end
 
   def active_colour
-    player_index = turns.size % 4
-    colours[player_index]
+    colour_index = turns.size % 4
+    colours[colour_index]
   end
 
   def active_player
