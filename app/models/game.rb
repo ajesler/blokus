@@ -21,4 +21,8 @@ class Game < ActiveRecord::Base
     player_index = turns.size % 4
     players.play_order[player_index]
   end
+
+  def finished?
+    turns.reverse_play_order.limit(4).all? { |turn| turn.pass? }
+  end
 end

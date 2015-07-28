@@ -113,4 +113,42 @@ RSpec.describe Game, type: :model do
       end
     end
   end
+
+  describe "#finished?" do
+    def create_pass_turn(player)
+      player.turns.create!(player: players(:one), shape: nil, transform: nil, x: nil, y: nil)
+    end
+
+    context "with a finished game" do
+      before do
+        %i(one two three four).each do |player_symbol|
+          create_pass_turn(players(player_symbol))
+        end
+      end
+
+      it "returns true" do
+        expect(game).to be_finished 
+      end
+    end
+
+    context "with an unfinished game" do
+      context "with no pass turns" do
+        it "returns false" do
+          expect(game).to_not be_finished        
+        end
+      end
+
+      context "with three pass turns" do
+        before do
+          %i(one two three).each do |player_symbol|
+            create_pass_turn(players(player_symbol))
+          end
+        end
+
+        it "returns false" do
+          expect(game).to_not be_finished        
+        end
+      end
+    end
+  end
 end
