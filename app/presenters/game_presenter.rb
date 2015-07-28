@@ -1,4 +1,4 @@
-class Gameresenter
+class GamePresenter
   def initialize(player)
     @player = player
     @game = @player.game
@@ -14,7 +14,6 @@ class Gameresenter
     end
 
     @turns = @game.turns
-    @turns_url = game_turns_url(@game)
 
     used_shapes = @player.turns.map { |turn| turn.shape }
     available_shapes = @game.shapes - used_shapes
