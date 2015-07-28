@@ -1,7 +1,6 @@
 require 'matrix'
 
 class Shapes
-	# TODO merge this into Shape?
 	def self.names
 		SHAPES.keys.sort!
 	end
