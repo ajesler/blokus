@@ -10,7 +10,7 @@ class TurnsController < ApplicationController
 		create_turn_params = CreateTurnFormObject.new(params)
 
 		if create_turn_params.valid?
-			created = PlayPiece.new(@game, @player, create_turn_params.coordinates).call
+			created = PlayPiece.new(@player, create_turn_params.coordinates).call
 			if created
 				# TODO respond positively
 			else
