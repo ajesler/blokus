@@ -111,15 +111,9 @@ Validation Checks for blocks need to look at:
 	- Least squares fitting of two 3d point sets - http://162.105.204.96/teachers/yaoy/Fall2011/arun.pdf
 
 
-### Bugs
-
-- Board square hover classes not cleared properly
-
-
 ### TODO
 
 - Move shapes to the DB
-- Add an HTML view for the shapes - perhaps showing each?
 
 ### Extras
 
