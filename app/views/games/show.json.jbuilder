@@ -1,6 +1,6 @@
-json.set! "finished", @presenter.finished
-json.set! "scores", @presenter.scores
-json.set! "activeColour", @presenter.active_colour
-json.set! "isActivePlayer", @ipresenter.s_active_player
-json.set! "board", @presenter.board
-json.set! "pieces", @presenter.pieces
+json.finished @presenter.finished
+json.scores @presenter.scores
+json.activeColour @presenter.active_colour
+json.isActivePlayer @presenter.is_active_player
+json.pieces @presenter.pieces
+json.turns @presenter.turns, :shape, :transform, :x, :y

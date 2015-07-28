@@ -8,52 +8,39 @@ var Blokus = (function() {
 
   var blokus = {};
 
-  var settings = null;
-  var turns = null;
+  var gameID = null;
+  var gameData = null;
   var dragSourceElement = null;
   var board = null;
 
   var pieceCoords = null;
 
-  var turnsLoadedCallback = function(turnsJSON) {
-    turns = turnsJSON;
-    blokus.buildBoard();
-    blokus.renderPlayerPieces();
-    blokus.renderBoard();
-    blokus.initDragAndDrop();
-  }
+  blokus.init = function(gameid) {
+    gameID = gameid;
 
-  blokus.init = function(gameSettings) {
-    settings = gameSettings;
-
-    blokus.loadTurns();
+    blokus.loadGame(gameID);
   };
 
   blokus.reload = function(){
     window.location.reload();
   };
 
-  blokus.loadTurns = function() {
-    var request = new XMLHttpRequest();
-    request.onreadystatechange = function() {
-      if (request.readyState === 4) {
-        responseJSON = JSON.parse(request.responseText);
-        if (request.status === 200) {
-          turnsLoadedCallback(responseJSON);
-        } else {
-          alert("Failed to play turn: "+responseJSON.message)
-        }
-      }
-    };
+  blokus.loadGame = function(id) {
+    var gameURL = "/games/"+id+".json"
+    Utils.getJSON(gameURL, function(data){
+      gameData = data;
 
-    request.open("GET", settings.turnsURL, true);
-    request.send(null);
-  };
+      blokus.buildBoard();
+      blokus.renderBoard();
+      blokus.renderPlayerPieces();
+      blokus.initDragAndDrop();
+    });
+  }
 
   blokus.buildBoard = function() {
     board = new Board();
 
-    turns.forEach(function(turn, index) {
+    gameData.turns.forEach(function(turn, index) {
       var colour = PLAYER_COLOURS[index % 4];
 
       var passed = turn.shape === null || turn.transform === null;
@@ -71,7 +58,7 @@ var Blokus = (function() {
 
   var shapesUserHasPlayed = function(all_turns) {
     var usedShapes = all_turns.filter(function(turn, index){
-      return PLAYER_COLOURS.indexOf(settings.activeColour) == index % 4
+      return PLAYER_COLOURS.indexOf(gameData.activeColour) == index % 4
     }).map(function(turn){
       return turn.shape;
     });
@@ -82,9 +69,9 @@ var Blokus = (function() {
   blokus.renderPlayerPieces = function() {
     var piecesContainer = document.getElementById("pieces");
 
-    var shapesUsed = shapesUserHasPlayed(turns);
+    var shapesUsed = shapesUserHasPlayed(gameData.turns);
 
-    return Render.playerPieces(piecesContainer, settings.isPlayersTurn, settings.activeColour, shapesUsed);
+    return Render.playerPieces(piecesContainer, gameData.isActivePlayer, gameData.activeColour, shapesUsed);
   };
 
   blokus.renderBoard = function(){
@@ -151,7 +138,7 @@ var Blokus = (function() {
   var highlightDropSquares = function() {
     if (pieceCoords !== null) {
       var messages = [];
-      var validPlacement = board.isValidMove(pieceCoords, settings.activeColour);
+      var validPlacement = board.isValidMove(pieceCoords, gameData.activeColour);
       var highlightClass = validPlacement ? "over" : "invalid-placement";
       
       for (var i = pieceCoords.columnCount() - 1; i >= 0; i--){
@@ -184,8 +171,8 @@ var Blokus = (function() {
       var point = pieceCoords.column(i);
       var square = getSquare(point[0], point[1]);
 
-      square.classList.add("wide-stroke", "block-"+settings.activeColour);
-      board.square(point[0], point[1], settings.activeColour);
+      square.classList.add("wide-stroke", "block-"+gameData.activeColour);
+      board.square(point[0], point[1], gameData.activeColour);
     }
   }
 
@@ -216,7 +203,7 @@ var Blokus = (function() {
     if (dragSourceElement != this) {
       var coordinates = getPieceCoverage(e);
       
-      if(board.isValidMove(coordinates, settings.activeColour)){
+      if(board.isValidMove(coordinates, gameData.activeColour)){
         placePiece(coordinates);
         disableIsomerDragging();
 
@@ -271,26 +258,13 @@ var Blokus = (function() {
       formData.append("coordinates[]", point[0]+","+point[1]);
     }
 
-    formData.append("player_id", settings.playerID);
+    formData.append("player_id", gameData.playerID);
 
-    var xhr = new XMLHttpRequest();
+    var url = "/games/"+gameID+"/turns";
 
-    xhr.onreadystatechange = function() {
-      if (xhr.readyState === 4) {
-        responseJSON = JSON.parse(xhr.responseText);
-        if (xhr.status === 200) {
-          blokus.reload();
-        } else {
-          alert("Failed to play turn: "+responseJSON.message)
-        }
-      }
-    };
-
-    xhr.open('POST', settings.turnsURL);
-    var csrf_token = document.querySelector('meta[name="csrf-token"]').attributes.content.value;
-    xhr.setRequestHeader('X-CSRF-Token', csrf_token);
-
-    xhr.send(formData)
+    Utils.httpPost(url, formData, function(data){
+      blokus.reload();
+    });
   };
 
   var createControls = function(){

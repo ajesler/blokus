@@ -7,18 +7,9 @@ class GamesController < ApplicationController
 		load_game
 		load_player
 
-		@active_colour = @game.active_colour
-		@is_players_turn = @game.active_player == @player
+		turns_url = game_turns_path(@game)
 
-		@turns_url = game_turns_path(@game)
-		@player_id = current_user.players.find_by!(game: game_id).id
-
-		@presenter = GamePresenter.new(@player)
-
-		respond_to do |format|
-			format.json { render json: @presenter }
-			format.html { render 'show' }
-		end
+		@presenter = GamePresenter.new(@player, turns_url)
 	end
 
 	def new
