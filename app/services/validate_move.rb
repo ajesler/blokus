@@ -50,7 +50,6 @@ class ValidateMove
   def is_first_turn_of_colour?
     @game.turns.play_order.each.with_index do |turn, index|
       turn_colour = @game.colours[index % @game.colours.length]
-
       return false if turn_colour == @colour
     end
 

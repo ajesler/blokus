@@ -32,6 +32,10 @@ var Board = (function(){
       x = x[0];
     }
 
+    if (this.size === "undefined") {
+      throw "undefined board size in board.pointOnBoard()";
+    }
+
     if(x > this.size - 1) { 
       return false
     }
@@ -136,6 +140,10 @@ var Board = (function(){
 
     return !touchesEdge;
   }
+
+  Board.prototype.isOnBoard = function(x, y) {
+    return pointOnBoard.call(this, x, y);
+  };
 
   Board.prototype.isValidMove = function(coordinates, playerColour) {
     var onBoard = allCoordinatesOnBoard(coordinates);

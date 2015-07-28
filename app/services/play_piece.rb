@@ -8,9 +8,10 @@ class PlayPiece
 	end
 
 	def call
-		if @game.active_player != @player
-			return false
-		end
+		# TODO restore this
+		# if @game.active_player != @player
+		# 	return false
+		# end
 
 		if @coordinates.empty?
 			@player.turns.create!(shape: nil, transform: nil, x: nil, y: nil)
@@ -29,12 +30,12 @@ class PlayPiece
 			return false
 		end
 
-		@colour = @game.colours[@game.turns.length % @game.colours.length]
-		@shape = @identified_shape.shape
-		@transform = @identified_shape.transform
-		@position = @identified_shape.position
+		colour = @game.colours[@game.turns.length % @game.colours.length]
+		shape = identified_shape.shape
+		transform = identified_shape.transform
+		position = identified_shape.position
 
-		@player.turns.create!(shape: @shape, transform: @transform, x: @position.x, y: @position.y)
+		@player.turns.create!(shape: shape, transform: transform, x: position.x, y: position.y)
 
 		move_is_valid
 	end

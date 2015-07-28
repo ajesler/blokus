@@ -37,11 +37,11 @@ var Blokus = (function() {
     var request = new XMLHttpRequest();
     request.onreadystatechange = function() {
       if (request.readyState === 4) {
+        responseJSON = JSON.parse(request.responseText);
         if (request.status === 200) {
-          responseJSON = JSON.parse(request.responseText);
           turnsLoadedCallback(responseJSON);
         } else {
-          // TODO handle error
+          alert("Failed to play turn: "+responseJSON.message)
         }
       }
     };
@@ -123,22 +123,22 @@ var Blokus = (function() {
   };
 
   // rename function and change e -> element
-  var getXAndY = function(e){
+  var getXAndY = function(e) {
     var x = JSON.parse(e.getAttribute("data-x"));
     var y = JSON.parse(e.getAttribute("data-y"));
 
     return [x, y];
   }
 
-  var getCoordinates = function(e){
+  var getCoordinates = function(e) {
     return JSON.parse(e.getAttribute("data-coordinates"));
   }
 
-  var getSquare = function(x, y){
+  var getSquare = function(x, y) {
     return document.querySelector("[data-x='"+x+"'][data-y='"+y+"']");
   }
 
-  var getPieceCoverage = function(e){
+  var getPieceCoverage = function(e) {
     var square = e.target.parentNode.parentNode;
 
     var point = getXAndY(square);
@@ -148,17 +148,18 @@ var Blokus = (function() {
     return matrix;
   }
 
-  var highlightDropSquares = function(){
-    if(pieceCoords !== null){
+  var highlightDropSquares = function() {
+    if (pieceCoords !== null) {
       var messages = [];
       var validPlacement = board.isValidMove(pieceCoords, settings.activeColour);
       var highlightClass = validPlacement ? "over" : "invalid-placement";
       
-      for(var i = pieceCoords.columnCount() - 1; i >= 0; i--){
+      for (var i = pieceCoords.columnCount() - 1; i >= 0; i--){
         var point = pieceCoords.column(i);
-        var square = getSquare(point[0], point[1]);
-
-        square.classList.add(highlightClass);
+        if (board.isOnBoard(point)) {
+          var square = getSquare(point[0], point[1]);
+          square.classList.add(highlightClass);
+        }
       }
     }
   }
@@ -274,9 +275,16 @@ var Blokus = (function() {
 
     var xhr = new XMLHttpRequest();
 
-    xhr.addEventListener('load', function(event){
-      blokus.reload();
-    });
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4) {
+        responseJSON = JSON.parse(xhr.responseText);
+        if (xhr.status === 200) {
+          blokus.reload();
+        } else {
+          alert("Failed to play turn: "+responseJSON.message)
+        }
+      }
+    };
 
     xhr.open('POST', settings.turnsURL);
     var csrf_token = document.querySelector('meta[name="csrf-token"]').attributes.content.value;

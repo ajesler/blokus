@@ -1,1 +1,1 @@
-{ message: "OK" }
+json.set! "message", @message

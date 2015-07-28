@@ -8,16 +8,17 @@ class TurnsController < ApplicationController
 
 	def create
 		create_turn_params = CreateTurnFormObject.new(params)
-
 		if create_turn_params.valid?
 			created = PlayPiece.new(@player, create_turn_params.coordinates).call
 			if created
-				# TODO respond positively
+				@message = "OK"
 			else
-				# TODO reject with error
+				@message = "Failed to create turn for player #{@player.name}. PlayPiece failed."
+				render :create, :status => :internal_server_error
 			end
 		else
-			# TODO reject with error
+			@message = "Failed to create turn for player #{@player.name}. Invalid params."
+			render :create, :status => :internal_server_error
 		end
 	end
 
