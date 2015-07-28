@@ -257,9 +257,7 @@ var Blokus = (function() {
       var point = pieceCoords.column(i);
       formData.append("coordinates[]", point[0]+","+point[1]);
     }
-
-    formData.append("player_id", gameData.playerID);
-
+    
     var url = "/games/"+gameID+"/turns";
 
     Utils.httpPost(url, formData, function(data){
