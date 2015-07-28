@@ -8,14 +8,18 @@ class CreateTurnFormObject
   end
 
   def valid?
-    @coordinates.all? && @coordinates.size >= 1
-    # TODO check if active player is the submitting player
-    # TODO check if the current user owns the given player id
+    !@coordinates.nil? && !@player.nil?
   end
 
   private
 
   def extract_coordinates
-    @coordinates = @params.require(:coordinates).map { |coordinate| Point.from_string(coordinate) }
+    coordinate_params = @params.require(:coordinates).delete_if { |entry| entry.blank? }
+
+    if !coordinate_params.empty?
+      @coordinates = coordinate_params.map { |coordinate| Point.from_string(coordinate) }
+    else
+      @coordinates = []
+    end
   end
 end
