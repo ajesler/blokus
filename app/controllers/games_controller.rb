@@ -13,8 +13,10 @@ class GamesController < ApplicationController
 		@turns_url = game_turns_path(@game)
 		@player_id = current_user.players.find_by!(game: game_id).id
 
+		@presenter = GamePresenter.new(@game)
+
 		respond_to do |format|
-			format.json { render json: @game }
+			format.json { render json: @presenter }
 			format.html { render 'show' }
 		end
 	end

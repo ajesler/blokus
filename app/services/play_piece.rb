@@ -1,5 +1,3 @@
-require 'matrix'
-
 class PlayPiece
 	def initialize(player, coordinates)
 		@player = player
