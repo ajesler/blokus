@@ -8,8 +8,7 @@ class GamesController < ApplicationController
 		load_player
 
 		@active_colour = @game.active_colour
-		# TODO
-		@is_players_turn = true #@game.active_player == @player
+		@is_players_turn = @game.active_player == @player
 
 		@turns_url = game_turns_path(@game)
 		@player_id = current_user.players.find_by!(game: game_id).id

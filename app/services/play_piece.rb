@@ -8,10 +8,9 @@ class PlayPiece
 	end
 
 	def call
-		# TODO restore this
-		# if @game.active_player != @player
-		# 	return false
-		# end
+		if @game.active_player != @player
+			return false
+		end
 
 		if @coordinates.empty?
 			@player.turns.create!(shape: nil, transform: nil, x: nil, y: nil)
