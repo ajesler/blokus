@@ -1,5 +1,5 @@
 class GamePresenter
-  attr_accessor :turns, :finished, :active_colour, 
+  attr_accessor :finished, :active_colour, 
                 :is_active_player, :scores, :game_id,
                 :available_shapes, :board
 
@@ -21,8 +21,6 @@ class GamePresenter
       @scores = nil
       # calculate the players scores
     end
-
-    @turns = @game.turns.play_order
 
     used_shapes = @player.turns.map { |turn| Shapes[turn.shape] }
     @available_shapes = @game.shapes - used_shapes
