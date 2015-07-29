@@ -23,7 +23,8 @@ class ScorePlayer
   end
 
   def last_piece_was_single_square?
-    @player.turns.reverse_play_order.first.shape == "1"
+    last_piece = @player.turns.reverse_play_order.first
+    !last_piece.nil? && last_piece.shape == "1"
   end
 
   def unused_square_count
