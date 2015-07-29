@@ -24,7 +24,6 @@ class ConstructBoard
 		end
 	end
 
-	# TODO should this be on turn?
 	def points_of_piece(turn)
 		return [] if turn.pass?
 

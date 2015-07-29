@@ -2,17 +2,24 @@ var Board = (function(){
   var BLANK = "";
 
   var Board = function(size){
-    if(typeof(size) !== "undefined"){
-      this.size = size;
+    if(size instanceof Array){
+      // creating a new board with a given grid
+      var boardArray = size;
+      this.size = boardArray.length;
+      this.board = boardArray;
     } else {
-      this.size = 20;
-    }
+      if(typeof(size) !== "undefined"){
+        this.size = size;
+      } else {
+        this.size = 20;
+      }
 
-    this.board = new Array(this.size);
-    for(var y = 0; y < this.size; y++){
-      this.board[y] = new Array(this.size);
-      for(var x = 0; x < this.size; x++){
-        this.board[y][x] = BLANK;
+      this.board = new Array(this.size);
+      for(var y = 0; y < this.size; y++){
+        this.board[y] = new Array(this.size);
+        for(var x = 0; x < this.size; x++){
+          this.board[y][x] = BLANK;
+        }
       }
     }
   };

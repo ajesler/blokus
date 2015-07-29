@@ -7,3 +7,4 @@ json.pieces @presenter.available_shapes.each do |shape|
 	json.id shape.name
 	json.isomers shape.isomers
 end
+json.board @presenter.board

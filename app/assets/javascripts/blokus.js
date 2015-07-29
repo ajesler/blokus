@@ -30,31 +30,13 @@ var Blokus = (function() {
     Utils.getJSON(gameURL, function(data){
       gameData = data;
 
-      blokus.buildBoard();
+      board = new Board(gameData.board);
+      
       blokus.renderBoard();
       blokus.renderPlayerPieces();
       blokus.initDragAndDrop();
     });
   }
-
-  blokus.buildBoard = function() {
-    board = new Board();
-
-    gameData.turns.forEach(function(turn, index) {
-      var colour = PLAYER_COLOURS[index % 4];
-
-      var passed = turn.shape === null || turn.transform === null;
-      if (!passed) {
-        transform = Transform.transforms(turn.transform);
-        shape = Shape.shapes(turn.shape);
-        var positionedShape = shape.transform(transform, turn.x, turn.y);
-
-        positionedShape.eachPoint(function(x, y){
-          board.square(x, y, colour);
-        });
-      }
-    });
-  };
 
   blokus.renderPlayerPieces = function() {
     if(gameData.isActivePlayer){

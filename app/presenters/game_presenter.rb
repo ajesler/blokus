@@ -9,6 +9,8 @@ class GamePresenter
 
     @game_id = @game.id
 
+    game_board = ConstructBoard.new(@game).call
+    @board = BoardPresenter.new(game_board).board
 
     @finished = @game.finished?
     @active_colour = @game.active_colour
