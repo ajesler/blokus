@@ -1,9 +1,4 @@
 var Blokus = (function() {
-  var RED = "red";
-  var GREEN = "green";
-  var BLUE = "blue";
-  var YELLOW = "yellow";
-  var PLAYER_COLOURS = [BLUE, YELLOW, RED, GREEN];
   var EMPTY = "";
 
   var blokus = {};
@@ -31,22 +26,32 @@ var Blokus = (function() {
       gameData = data;
 
       board = new Board(gameData.board);
-      
+
       blokus.renderBoard();
-      blokus.renderPlayerPieces();
-      blokus.initDragAndDrop();
+
+      if(gameData.isActivePlayer){
+        blokus.renderPlayerPieces();
+        blokus.renderControls();
+        blokus.initDragAndDrop();
+      }
     });
-  }
+  };
 
   blokus.renderPlayerPieces = function() {
-    if(gameData.isActivePlayer){
-      Render.playerPieces(gameData.activeColour, gameData.pieces);
-    }
+    Render.playerPieces(gameData.activeColour, gameData.pieces);
   };
 
   blokus.renderBoard = function(){
     Render.board(board);
   };
+
+  blokus.renderControls = function() {
+    Render.passButton(gameID);
+  };
+
+  blokus.pieceCoordinates = function() {
+    return pieceCoords;
+  }
 
   var handleDragStart = function(e) {
     // this / e.target is the source node.
@@ -177,8 +182,8 @@ var Blokus = (function() {
         placePiece(coordinates);
         disableIsomerDragging();
 
-        clearControls();
-        createControls();
+        Render.clearPieceControls();
+        Render.pieceControls(gameID);
       }
     }
 
@@ -208,57 +213,10 @@ var Blokus = (function() {
     }
   };
 
-  var createButton = function(value) {
-    var button = document.createElement("input");
-    button.type = "button";
-    button.value = value;
-
-    return button;
-  };
-
-  var resetButtonAction = function(){
-    blokus.revertMove();
-  }
-
-  var saveButtonAction = function(){
-    var formData = new FormData();
-
-    for(var i = pieceCoords.columnCount() - 1; i >= 0; i--){
-      var point = pieceCoords.column(i);
-      formData.append("coordinates[]", point[0]+","+point[1]);
-    }
-
-    var url = "/games/"+gameID+"/turns";
-
-    Utils.httpPost(url, formData, function(data){
-      blokus.reload();
-    });
-  };
-
-  var createControls = function(){
-    var controls = document.getElementById("controls");
-
-    var resetButton = createButton("reset");
-    resetButton.onclick = resetButtonAction;
-
-    var saveButton = createButton("save");
-    saveButton.onclick = saveButtonAction;
-
-    controls.appendChild(resetButton);
-    controls.appendChild(saveButton);
-  };
-
-  var clearControls = function(){
-    var controls = document.getElementById("controls");
-    while (controls.firstChild){
-      controls.removeChild(controls.firstChild);
-    }
-  };
-
   blokus.revertMove = function(){
     enableIsomerDragging();
 
-    clearControls();
+    Render.clearPieceControls();
 
     for(var i = pieceCoords.columnCount() - 1; i >= 0; i--){
       var point = pieceCoords.column(i);

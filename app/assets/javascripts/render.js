@@ -107,5 +107,90 @@ var Render = (function(){
     });
   };
 
+  render.createButton = function(value) {
+    var button = document.createElement("input");
+    button.type = "button";
+    button.value = value;
+    button.setAttribute("id", value+"-button");
+
+    return button;
+  };
+
+  var passButtonAction = function(gid) {
+    return function() {
+      var formData = new FormData();
+
+      formData.append("coordinates[]", "");
+
+      var url = "/games/"+gid+"/turns";
+
+      Utils.httpPost(url, formData, function(data){
+        Blokus.reload();
+      });
+    }
+  };
+
+  var resetButtonAction = function(){
+    return function(){
+      Blokus.revertMove();
+    }
+  }
+
+  var saveButtonAction = function(gameID){
+    return function(){
+      var formData = new FormData();
+      var pieceCoords = Blokus.pieceCoordinates();
+
+      for(var i = pieceCoords.columnCount() - 1; i >= 0; i--){
+        var point = pieceCoords.column(i);
+        formData.append("coordinates[]", point[0]+","+point[1]);
+      }
+
+      var url = "/games/"+gameID+"/turns";
+
+      Utils.httpPost(url, formData, function(data){
+        Blokus.reload();
+      });
+    }
+  };
+
+  render.passButton = function(gameID) {
+    var controls = document.getElementById("controls");
+    var passButton = render.createButton("pass");
+    passButton.onclick = passButtonAction(gameID);
+
+    controls.appendChild(passButton);
+  };
+
+  render.pieceControls = function(gameID) {
+    var controls = document.getElementById("controls");
+
+    var resetButton = Render.createButton("reset");
+    resetButton.onclick = resetButtonAction();
+
+    var saveButton = Render.createButton("save");
+    saveButton.onclick = saveButtonAction(gameID);
+
+    controls.appendChild(resetButton);
+    controls.appendChild(saveButton);
+  };
+
+  var deleteNode = function(node){
+    node.parentNode.removeChild(node);
+  }
+
+  render.clearPieceControls = function(){
+    var buttons = [
+      document.getElementById("reset-button"),
+      document.getElementById("save-button")
+    ];
+
+    buttons.forEach(function(button){
+      if (button) {
+        deleteNode(button);
+      }
+    });
+  };
+
   return render;
 })();
