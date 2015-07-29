@@ -85,14 +85,14 @@ var Blokus = (function() {
   };
 
   // rename function and change e -> element
-  var getXAndY = function(e) {
+  var squareCoordinates = function(e) {
     var x = JSON.parse(e.getAttribute("data-x"));
     var y = JSON.parse(e.getAttribute("data-y"));
 
     return [x, y];
   }
 
-  var getCoordinates = function(e) {
+  var isomerCoordinates = function(e) {
     return JSON.parse(e.getAttribute("data-coordinates"));
   }
 
@@ -103,8 +103,8 @@ var Blokus = (function() {
   var getPieceCoverage = function(e) {
     var square = e.target.parentNode.parentNode;
 
-    var point = getXAndY(square);
-    var coordinates = getCoordinates(dragSourceElement);
+    var point = squareCoordinates(square);
+    var coordinates = isomerCoordinates(dragSourceElement);
     var matrix = new Matrix(coordinates).offset(point);
 
     return matrix;
