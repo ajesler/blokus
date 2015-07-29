@@ -1,18 +1,42 @@
-#controls {
-  padding: 5px;
-  width: 600px;
-  height: 25px;
-  position: fixed;
-  top: 630px;
-  left: 500px;
+$square-multiplier: 3;
+$square-scale: $square-multiplier * 10px;
+/*$square-scale: 30px;*/
+
+#wrapper {
+  width: 960px;
+  background-color: #FFF;
+  margin-left:auto;
+  margin-right:auto;
 }
 
-#board {  
-  width: 500px;
-  padding-left: 50px;
-  position: fixed;
-  top: 10px;
-  left: 450px;
+header {
+  
+}
+
+nav {
+  width:960px;
+}
+
+#content {
+  float: left;
+  width:660px;
+}
+
+#rightcol {
+  float: left;
+  width: 300px;
+}
+
+#gameover {
+  
+}
+
+#controls {
+  padding: 5px;
+  height: 25px;
+}
+
+#board {
 }
 
 .squares {
@@ -25,26 +49,23 @@
 }
 
 .square-row {
-  width: 600px;
-  height: 30px;
+  width: $square-scale*20;
+  height: $square-scale;
 }
 
 .square {
   position: relative;
   display: inline-block;
-	width: 30px;
-	height: 30px;
+	width: $square-scale;
+	height: $square-scale;
   fill: lightgray;
   stroke: darkgray;
   overflow: hidden;
 }
 
 #pieces {
-  position: fixed;
-  left: 0;
-  top: 0;
   width: 400px;
-  max-height: 100%;
+  height: 575px;
   overflow-y: scroll;
 }
 

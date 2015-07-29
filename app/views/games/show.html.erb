@@ -5,6 +5,19 @@ window.onload = function(){
 };
 </script>
 
-<div id="pieces"></div>
-<div id="board"></div>
-<div id="controls"></div>
+
+<div id="wrapper">
+	<header>
+		<h2><%= current_user.name %></h2>
+		<nav></nav>
+		<div id="gameover"></div>
+	</header>
+
+	<div id="content">
+		<div id="board"></div>
+	</div> 
+	<div id="rightcol">
+		<div id="controls"></div>
+		<div id="pieces"></div>
+	</div> 
+</div> 
