@@ -4,11 +4,10 @@ class CreateTurnFormObject
   def initialize(params)
     @params = params
     @coordinates = extract_coordinates
-    @player = params.require(:player_id)
   end
 
   def valid?
-    !@coordinates.nil? && !@player.nil?
+    !@coordinates.nil?
   end
 
   private
