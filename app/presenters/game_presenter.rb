@@ -1,7 +1,7 @@
 class GamePresenter
-  attr_accessor :player, :turns, :player_id, :turns_url, :finished,
-                :active_colour, :is_active_player, :pieces, :game,
-                :scores, :game_id
+  attr_accessor :turns, :finished, :active_colour, 
+                :is_active_player, :scores, :game_id,
+                :available_shapes, :board
 
   def initialize(player, turns_url)
     @player = player
@@ -9,8 +9,6 @@ class GamePresenter
 
     @game_id = @game.id
 
-    @turns_url = turns_url
-    @player_id = @player.id
 
     @finished = @game.finished?
     @active_colour = @game.active_colour
@@ -24,10 +22,7 @@ class GamePresenter
 
     @turns = @game.turns.play_order
 
-    used_shapes = @player.turns.map { |turn| turn.shape }
-    available_shapes = @game.shapes - used_shapes
-
-    @pieces = nil
-    # TODO create all of the isomers for each shape
+    used_shapes = @player.turns.map { |turn| Shapes[turn.shape] }
+    @available_shapes = @game.shapes - used_shapes
   end
 end

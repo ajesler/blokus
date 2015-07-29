@@ -151,28 +151,6 @@ var Shape = (function(){
     }
   };
 
-  var containsIsomer = function(isomers, isomer) {
-    var matching_isomers = isomers.filter(function(shape){
-      return shape.hasSameCoordinates(isomer);
-    });
-    return matching_isomers.length > 0;
-  };
-
-  Shape.prototype.isomers = function() {
-    var isomers = [];
-
-    Utils.forEachKeyValue.call(this, Transform.transforms(), function(key, transform){
-      var transform_applied = transform.multiply(this.shape_definition);
-      var newShape = new Shape(transform_applied).moveToOrigin();
-
-      if(!containsIsomer(isomers, newShape)){
-        isomers.push(newShape);
-      }
-  });
-
-    return isomers;
-  };
-
   // TODO How to load?
   var all_shapes = {"Z4":[[0,0,1,1],[0,1,1,2]],"Z5":[[0,1,1,1,2],[0,0,1,2,2]],"N":[[0,0,1,1,1],[0,1,1,2,3]],"W":[[0,1,1,2,2],[0,0,1,1,2]],"X":[[0,1,1,2,1],[1,0,1,1,2]],"O":[[0,0,1,1],[0,1,1,0]],"1":[[0],[0]],"2":[[0,0],[0,1]],"I3":[[0,0,0],[0,1,2]],"I4":[[0,0,0,0],[0,1,2,3]],"I5":[[0,0,0,0,0],[0,1,2,3,4]],"V5":[[0,0,0,1,2],[0,1,2,2,2]],"V3":[[0,0,1],[0,1,1]],"L5":[[0,1,0,0,0],[0,0,1,2,3]],"L4":[[0,1,0,0],[0,0,1,2]],"U":[[0,1,2,0,2],[0,0,0,1,1]],"T4":[[1,0,1,2],[0,1,1,1]],"T5":[[1,1,0,1,2],[0,1,2,2,2]],"F":[[1,1,2,0,1],[0,1,1,2,2]],"P":[[0,1,0,1,0],[0,0,1,1,2]],"Y":[[0,0,0,1,0],[0,1,2,2,3]]};
 

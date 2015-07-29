@@ -21,7 +21,7 @@ class Shape
   private
 
   def calculate_isomers
-    Transforms.transforms.each.with_object(Set.new) do |transform, isomers|
+    isomer_points = Transforms.transforms.each.with_object(Set.new) do |transform, isomers|
       isomer = transform.definition * self.definition
 
       isomer_at_origin = MatrixConversions.move_to_origin(isomer)
@@ -30,6 +30,10 @@ class Shape
       if !isomers.include?(point_set)
         isomers.add(point_set)
       end
+    end
+
+    isomer_points.each.with_object([]) do |points, matrix_array|
+      matrix_array << MatrixConversions.from_point_set(points)
     end
   end
 end

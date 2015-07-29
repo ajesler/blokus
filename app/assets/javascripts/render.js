@@ -75,13 +75,13 @@ var Render = (function(){
     return svgDiv;
   }
 
-  render.shape = function(shape, colour) {
+  render.piece = function(name, isomers, colour) {
     var shapeContainer = document.createElement("div");
     shapeContainer.setAttribute("class", "shape");
 
     var titleContainer = document.createElement("div");
     var title = document.createElement("h3");
-    title.appendChild(document.createTextNode(shape.shapeName()));
+    title.appendChild(document.createTextNode(name));
     titleContainer.appendChild(title);
     shapeContainer.appendChild(titleContainer);
 
@@ -89,26 +89,22 @@ var Render = (function(){
     isomersContainer.setAttribute("class", "isomers");
     shapeContainer.appendChild(isomersContainer);
 
-    var isomers = shape.isomers();
-    for(var i = 0; i < isomers.length; i++){
-      var isomer = render.isomer(isomers[i], colour);
-      isomersContainer.appendChild(isomer);
-    }
+    isomers.forEach(function(isomerDefinition){
+      var isomer = new Shape(isomerDefinition);
+      var renderedIsomer = render.isomer(isomer, colour);
+      isomersContainer.appendChild(renderedIsomer);
+    });
 
     return shapeContainer;
-  };
+  }
   
-  render.playerPieces = function(container, isPlayerTurn, colour, usedShapes) {
-    if(isPlayerTurn){
-      var shapes = Shape.shapes();
-      Utils.forEachKeyValue(shapes, function(key, shape){
-        if(!Utils.containsElement(usedShapes, key))
-        {
-          var shapeContainer = render.shape(shape, colour);
-          container.appendChild(shapeContainer); 
-        }
-      });
-    }
+  render.playerPieces = function(colour, pieces) {
+    var piecesContainer = document.getElementById("pieces");
+
+    pieces.forEach(function(piece){
+      var renderedShape = render.piece(piece.id, piece.isomers, colour);
+      piecesContainer.appendChild(renderedShape);
+    });
   };
 
   return render;

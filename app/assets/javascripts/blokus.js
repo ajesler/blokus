@@ -56,22 +56,10 @@ var Blokus = (function() {
     });
   };
 
-  var shapesUserHasPlayed = function(all_turns) {
-    var usedShapes = all_turns.filter(function(turn, index){
-      return PLAYER_COLOURS.indexOf(gameData.activeColour) == index % 4
-    }).map(function(turn){
-      return turn.shape;
-    });
-
-    return usedShapes;
-  };
-
   blokus.renderPlayerPieces = function() {
-    var piecesContainer = document.getElementById("pieces");
-
-    var shapesUsed = shapesUserHasPlayed(gameData.turns);
-
-    return Render.playerPieces(piecesContainer, gameData.isActivePlayer, gameData.activeColour, shapesUsed);
+    if(gameData.isActivePlayer){
+      Render.playerPieces(gameData.activeColour, gameData.pieces);
+    }
   };
 
   blokus.renderBoard = function(){
@@ -257,7 +245,7 @@ var Blokus = (function() {
       var point = pieceCoords.column(i);
       formData.append("coordinates[]", point[0]+","+point[1]);
     }
-    
+
     var url = "/games/"+gameID+"/turns";
 
     Utils.httpPost(url, formData, function(data){
