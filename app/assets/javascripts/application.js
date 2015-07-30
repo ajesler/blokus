@@ -16,3 +16,6 @@
 //= require_tree .
 //= require websocket_rails/main
 
+window.onload = function(){
+  Blokus.init();
+};
