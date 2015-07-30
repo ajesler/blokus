@@ -30,6 +30,7 @@ var Blokus = (function() {
       blokus.renderBoard();
 
       if (gameData.finished) {
+        Render.finished(gameData.scores, gameData.winningPlayerID);
       } else {
         blokus.initWebSockets();
         if (gameData.isActivePlayer) {
