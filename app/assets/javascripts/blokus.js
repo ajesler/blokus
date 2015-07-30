@@ -29,10 +29,14 @@ var Blokus = (function() {
 
       blokus.renderBoard();
 
-      if(gameData.isActivePlayer){
-        blokus.renderPlayerPieces();
-        blokus.renderControls();
-        blokus.initDragAndDrop();
+      if (gameData.finished) {
+      } else {
+        blokus.initWebSockets();
+        if (gameData.isActivePlayer) {
+          blokus.renderPlayerPieces();
+          blokus.renderControls();
+          blokus.initDragAndDrop();
+        }
       }
     });
   };
@@ -51,6 +55,22 @@ var Blokus = (function() {
 
   blokus.pieceCoordinates = function() {
     return pieceCoords;
+  }
+
+  blokus.initWebSockets = function() {
+    // connect to server like normal
+    var dispatcher = new WebSocketRails('localhost:3000/websocket');
+
+    // subscribe to the channel
+    var channel = dispatcher.subscribe('game_'+gameID);
+
+    // bind to a channel event
+    channel.bind('update', function(data) {
+      console.log('channel event received: ' + data);
+      if (data.updated) {
+        Blokus.reload();
+      }
+    });
   }
 
   var handleDragStart = function(e) {

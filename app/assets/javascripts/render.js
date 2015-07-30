@@ -149,7 +149,9 @@ var Render = (function(){
       var url = "/games/"+gameID+"/turns";
 
       Utils.httpPost(url, formData, function(data){
-        Blokus.reload();
+        console.log("Saved the turn. ", data);
+      }, function(data){
+        alert("Failed to save move: "+data.message);
       });
     }
   };
@@ -191,6 +193,36 @@ var Render = (function(){
       }
     });
   };
+
+  render.finished = function(scores, winnerID){
+    var gameOver = document.getElementById("gameover");
+
+    var winningResult = scores.find(function(result){
+      return result.id === winnerID;
+    });
+
+    var winner = document.createElement("h3");
+    winner.appendChild(document.createTextNode(winningResult.name+' was the winning player!'));
+    gameOver.appendChild(winner);
+
+    var scoresTable = document.createElement("table");
+    scores
+        .sort(function(a, b){
+          return b.score - a.score;
+        })
+        .forEach(function(result){
+          var tr = document.createElement("tr");
+          var tdName = document.createElement("td");
+          tdName.innerHTML = result.name;
+          var tdScore = document.createElement("td");
+          tdScore.innerHTML = result.score;
+          tr.appendChild(tdName);
+          tr.appendChild(tdScore);
+          scoresTable.appendChild(tr);
+        });
+
+    gameOver.appendChild(scoresTable);
+  }
 
   return render;
 })();
