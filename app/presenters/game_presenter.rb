@@ -3,7 +3,7 @@ class GamePresenter
                 :is_active_player, :scores, :game_id,
                 :available_shapes, :board, :winner
 
-  def initialize(player, turns_url)
+  def initialize(player)
     @player = player
     @game = @player.game
 
@@ -26,7 +26,6 @@ class GamePresenter
       @winner = @scores.max_by { |player, score| score }[0].id
     end
 
-    used_shapes = @player.turns.map { |turn| Shapes[turn.shape] }
-    @available_shapes = (@game.shapes - used_shapes).sort { |a, b| b.size <=> a.size }
+    @available_shapes = FindAvailableShapes.new(@player).call
   end
 end
