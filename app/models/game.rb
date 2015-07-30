@@ -23,6 +23,8 @@ class Game < ActiveRecord::Base
   end
 
   def finished?
-    turns.reverse_play_order.limit(4).all? { |turn| turn.pass? }
+    has_more_than_four_turns = turns.size > 4
+    last_four_turns_are_passes = turns.reverse_play_order.limit(4).all? { |turn| turn.pass? }
+    has_more_than_four_turns && last_four_turns_are_passes
   end
 end

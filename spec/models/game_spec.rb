@@ -119,6 +119,18 @@ RSpec.describe Game, type: :model do
       player.turns.create!(player: players(:one), shape: nil, transform: nil, x: nil, y: nil)
     end
 
+    context "when a game has no turns" do
+      before do
+        game.players.each do |player|
+          player.turns.destroy_all
+        end
+      end
+
+      it "is not finished" do
+        expect(game).to_not be_finished
+      end
+    end
+
     context "with a finished game" do
       before do
         %i(one two three four).each do |player_symbol|
