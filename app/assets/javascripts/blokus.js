@@ -59,6 +59,9 @@ var Blokus = (function() {
     dragSourceElement = this;
 
     e.dataTransfer.effectAllowed = 'move';
+
+    // hack to make firefox work
+    e.dataTransfer.setData('text', 'foo');
   };
 
   var handleDragOver = function(e) {
@@ -169,6 +172,8 @@ var Blokus = (function() {
 
   function handleDrop(e) {
     // this / e.target is current target element.
+
+    e.preventDefault();
 
     if (e.stopPropagation) {
       e.stopPropagation(); // stops the browser from redirecting.
