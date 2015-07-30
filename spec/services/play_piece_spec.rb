@@ -50,5 +50,20 @@ RSpec.describe PlayPiece do
         expect(turn.y).to be_nil
       end
     end
+
+    context "when the game is finished" do
+      before do
+        game.turns.play_order.each { |turn| turn.destroy! }
+        [players(:one), players(:two), players(:three), players(:four)].each do |player|
+          player.turns.create(shape: nil, transform: nil, x: nil, y: nil)
+        end
+      end
+      
+      let(:coordinates) { [Point.new(0, 19), Point.new(1, 19), Point.new(1, 18), Point.new(2, 18), Point.new(1, 17)] }
+
+      it "rejects the move" do
+        expect(play_piece.call).to be false
+      end
+    end
   end
 end

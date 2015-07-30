@@ -6,6 +6,10 @@ class PlayPiece
 	end
 
 	def call
+		if @game.finished?
+			return false
+		end
+
 		if @game.active_player != @player
 			return false
 		end
