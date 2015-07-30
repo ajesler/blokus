@@ -2,6 +2,17 @@
 var Utils = (function(){
   var utils = {};
 
+  if (Array.prototype.find === undefined){
+    Array.prototype.find = function(callback) {
+      for (var i = 0; i < this.length; i++) {
+        if(callback(this[i], i, this)){
+          return this[i];
+        }
+      }
+      return undefined;
+    };
+  }
+
   // Array Remove - By John Resig (MIT Licensed)
   Array.prototype.remove = function(from, to) {
     var rest = this.slice((to || from) + 1 || this.length);
