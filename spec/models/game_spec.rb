@@ -3,6 +3,12 @@ require 'rails_helper'
 RSpec.describe Game, type: :model do
   fixtures :all
 
+  def destroy_all_game_turns(game)
+    game.players.each do |player|
+      player.turns.destroy_all
+    end
+  end
+
   let(:game) { games(:one) }
 
   describe "#shapes" do
@@ -27,17 +33,18 @@ RSpec.describe Game, type: :model do
 
       context "with no turns played" do
         before do
-          game.turns.each { |turn| turn.destroy! }
+          destroy_all_game_turns(game)
         end
 
         it "returns player one" do
+          expect(game.turns.size).to eq 0
           expect(game.active_player).to eq player
         end
       end
 
       context "with four turns played" do
         before do
-          game.turns.offset(4).each { |turn| turn.destroy! }
+          game.turns.play_order.offset(4).each { |turn| turn.destroy! }
         end
 
         it "returns player one" do
@@ -49,7 +56,7 @@ RSpec.describe Game, type: :model do
         let(:player) { players(:three) }
 
         before do
-          game.turns.offset(6).each { |turn| turn.destroy! }
+          game.turns.play_order.offset(6).each { |turn| turn.destroy! }
         end
 
         it "returns player three" do
@@ -64,7 +71,7 @@ RSpec.describe Game, type: :model do
         
       context "with no turns played" do
         before do
-          game.turns.each { |turn| turn.destroy! }
+          destroy_all_game_turns(game)
         end
 
         it "returns blue" do
@@ -74,7 +81,7 @@ RSpec.describe Game, type: :model do
 
       context "with four turns played" do
         before do
-          game.turns.offset(4).each { |turn| turn.destroy! }
+          game.turns.play_order.offset(4).each { |turn| turn.destroy! }
         end
 
         it "returns blue" do
@@ -84,7 +91,7 @@ RSpec.describe Game, type: :model do
 
       context "with five turns played" do
         before do
-          game.turns.offset(5).each { |turn| turn.destroy! }
+          game.turns.play_order.offset(5).each { |turn| turn.destroy! }
         end
 
         it "returns yellow" do
@@ -94,7 +101,7 @@ RSpec.describe Game, type: :model do
 
       context "with six turns played" do
         before do
-          game.turns.offset(6).each { |turn| turn.destroy! }
+          game.turns.play_order.offset(6).each { |turn| turn.destroy! }
         end
 
         it "returns red" do
@@ -104,7 +111,7 @@ RSpec.describe Game, type: :model do
 
       context "with seven turns played" do
         before do
-          game.turns.offset(7).each { |turn| turn.destroy! }
+          game.turns.play_order.offset(7).each { |turn| turn.destroy! }
         end
 
         it "returns green" do
@@ -121,9 +128,7 @@ RSpec.describe Game, type: :model do
 
     context "when a game has no turns" do
       before do
-        game.players.each do |player|
-          player.turns.destroy_all
-        end
+        destroy_all_game_turns(game)
       end
 
       it "is not finished" do
