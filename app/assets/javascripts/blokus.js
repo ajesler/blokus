@@ -10,18 +10,27 @@ var Blokus = (function() {
 
   var pieceCoords = null;
 
-  blokus.init = function(gameid) {
-    gameID = gameid;
+  var readGameId = function() {
+    var gameIdMeta = document.querySelector('meta[name="blokus_game_id"]');
+    if (gameIdMeta) {
+      return gameIdMeta.attributes.content.value;
+    } else {
+      return undefined;
+    }
+  };
 
-    blokus.loadGame(gameID);
+  blokus.init = function() {
+    gameID = readGameId();
+
+    blokus.loadGame();
   };
 
   blokus.reload = function(){
     window.location.reload();
   };
 
-  blokus.loadGame = function(id) {
-    var gameURL = "/games/"+id+".json"
+  blokus.loadGame = function() {
+    var gameURL = "/games/"+gameID+".json"
     Utils.getJSON(gameURL, function(data){
       gameData = data;
 
