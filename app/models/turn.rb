@@ -12,8 +12,8 @@ class Turn < ActiveRecord::Base
 		numericality: { only_integer: true }, 
 		if: :has_shape_or_transform?
 
-	scope :play_order, -> { order(created_at: :asc)}
-	scope :reverse_play_order, -> { order(created_at: :desc)}
+	scope :play_order, -> { order(created_at: :asc, id: :asc)}
+	scope :reverse_play_order, -> { order(created_at: :desc, id: :desc)}
 
 	def position
 		@position ||= Point.new(x, y)
