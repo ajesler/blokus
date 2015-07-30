@@ -7,9 +7,9 @@ class GamesController < ApplicationController
 		load_game
 		load_player
 
-		turns_url = game_turns_path(@game)
-
-		@presenter = GamePresenter.new(@player, turns_url)
+		if request.format == :json
+			@presenter = GamePresenter.new(@player)
+		end
 	end
 
 	def new
