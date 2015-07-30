@@ -1,7 +1,8 @@
 class GamePresenter
   attr_accessor :finished, :active_colour, 
                 :is_active_player, :scores, :game_id,
-                :available_shapes, :board, :winner
+                :available_shapes, :board, :winner,
+                :is_first_turn
 
   def initialize(player)
     @player = player
@@ -15,6 +16,9 @@ class GamePresenter
     @finished = @game.finished?
     @active_colour = @game.active_colour
     @is_active_player = @game.active_player == @player
+    if @is_active_player
+      @is_first_turn = @player.turns.empty?
+    end
 
     if @finished
       @scores = @game.players.each.with_object({}) do |player, scores|

@@ -2,7 +2,7 @@
 var Utils = (function(){
   var utils = {};
 
-  if (Array.prototype.find === undefined){
+  if (!Array.prototype.find){
     Array.prototype.find = function(callback) {
       for (var i = 0; i < this.length; i++) {
         if(callback(this[i], i, this)){
@@ -11,7 +11,18 @@ var Utils = (function(){
       }
       return undefined;
     };
-  }
+  };
+
+  if (!Array.prototype.includes) {
+    Array.prototype.includes = function(element) {
+      for(var i = array.length - 1; i >= 0; i--){
+      if(this[i] === element){
+        return true;
+      }
+    }
+    return false;
+    }
+  };
 
   // Array Remove - By John Resig (MIT Licensed)
   Array.prototype.remove = function(from, to) {
@@ -95,33 +106,3 @@ var Utils = (function(){
 
   return utils;
 })();
-
-// ajLand = (function() {
-//   var modules = {}
-//   var queuedModules = {}
-
-//   var require = function() {
-//     var max = arguments.length - 1
-//     var callback = arguments[max]
-//     var requires = arguments.slice(0, max - 1)
-//   }
-
-//   var declare = function(name, definition) {
-//     modules[name] = definition
-//     if queuedModules[name]
-//   }
-
-//   return {
-//     ajModule: require,
-//     ajRequire: declare,
-//   }
-// })()
-
-
-// ajLand.require("utils", "matrix", function(utils, matrix) {
-
-// })
-
-// ajLand.declare("utils", function() {
-//   return {} // stuff
-// })

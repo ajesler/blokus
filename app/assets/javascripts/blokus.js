@@ -137,7 +137,7 @@ var Blokus = (function() {
   var highlightDropSquares = function() {
     if (pieceCoords !== null) {
       var messages = [];
-      var validPlacement = board.isValidMove(pieceCoords, gameData.activeColour);
+      var validPlacement = board.isValidMove(pieceCoords, gameData.activeColour, gameData.isFirstTurn);
       var highlightClass = validPlacement ? "over" : "invalid-placement";
       
       for (var i = pieceCoords.columnCount() - 1; i >= 0; i--){
@@ -204,7 +204,7 @@ var Blokus = (function() {
     if (dragSourceElement != this) {
       var coordinates = getPieceCoverage(e);
       
-      if(board.isValidMove(coordinates, gameData.activeColour)){
+      if(board.isValidMove(coordinates, gameData.activeColour, gameData.isFirstTurn)){
         placePiece(coordinates);
         disableIsomerDragging();
 

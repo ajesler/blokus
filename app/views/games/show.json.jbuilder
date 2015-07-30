@@ -9,6 +9,9 @@ if @presenter.finished
 end
 json.activeColour @presenter.active_colour
 json.isActivePlayer @presenter.is_active_player
+if @presenter.is_active_player
+  json.isFirstTurn @presenter.is_first_turn
+end
 json.pieces @presenter.available_shapes.each do |shape|
 	json.id shape.name
 	json.isomers shape.isomers

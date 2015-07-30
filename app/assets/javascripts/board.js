@@ -59,8 +59,9 @@ var Board = (function(){
   }
 
   var allCoordinatesOnBoard = function(coordinates){
+    var self = this;
     var allOnBoard = coordinates.columns().reduce(function(validity, currentValue){
-      var isValid = pointOnBoard(currentValue[0], currentValue[1]);
+      var isValid = pointOnBoard.call(self, currentValue[0], currentValue[1]);
       return validity && isValid;
     }, true);
 
@@ -148,17 +149,57 @@ var Board = (function(){
     return !touchesEdge;
   }
 
+  var inBoardCorner = function(coordinates) {
+    var max_index = this.size - 1
+    var corners = [
+      [0, 0],
+      [0, max_index],
+      [max_index, 0],
+      [max_index, max_index]
+    ]
+
+    var isInBoardCorner = false;
+    coordinates.columns().forEach(function(column){
+      var coversCorner = corners
+                          .map(function(cornerPoint){
+                            var isCorner = cornerPoint[0] === column[0] && cornerPoint[1] === column[1];
+                            return isCorner;                
+                          }).some(function(element){
+                            return element;
+                          });
+      if (coversCorner) {
+        isInBoardCorner = true;
+      }
+    });
+
+    return isInBoardCorner;
+  };
+
   Board.prototype.isOnBoard = function(x, y) {
     return pointOnBoard.call(this, x, y);
   };
 
-  Board.prototype.isValidMove = function(coordinates, playerColour) {
-    var onBoard = allCoordinatesOnBoard(coordinates);
-    var areEmpty = this.coordinatesAreAllEmpty(coordinates);
-    var touchesCorner = touchesACornerOfSameColour.call(this, coordinates, playerColour);
-    var noSharedEdges = doesNotTouchEdgesOfTheSameColour.call(this, coordinates, playerColour);
+  Board.prototype.isValidMove = function(coordinates, playerColour, isFirstTurn) {
+    var onBoard = allCoordinatesOnBoard.call(this, coordinates);
+    if (!onBoard) {
+      return false;
+    }
 
-    var isValid = onBoard && areEmpty && touchesCorner && noSharedEdges;
+    var areEmpty = this.coordinatesAreAllEmpty(coordinates);
+    if (!areEmpty) {
+      return false;
+    }
+
+    var isValid = false;
+    if (isFirstTurn) {
+      var coversABoardCorner = inBoardCorner.call(this, coordinates);
+      isValid = onBoard && areEmpty && coversABoardCorner;
+    } else {
+      var touchesCornerOfSameColour = touchesACornerOfSameColour.call(this, coordinates, playerColour);
+      var noSharedEdges = doesNotTouchEdgesOfTheSameColour.call(this, coordinates, playerColour);
+
+      isValid = onBoard && areEmpty && touchesCornerOfSameColour && noSharedEdges;
+    }
     return isValid;
   };
 
