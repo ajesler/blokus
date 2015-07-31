@@ -40,10 +40,12 @@ nav {
 }
 
 .squares {
+  width: $square-scale*20;
+  border: 1px solid darkgray;
 }
 
 .squares:after{
-	clear: both;
+  clear: both;
   content: "";
   display: block;
 }
@@ -127,9 +129,13 @@ nav {
 }
 
 .over {
-  fill: black;
+  fill: violet;
+}
+
+.hint {
+  fill: violet;
 }
 
 .invalid-placement {
-  fill: purple;
+  fill: black;
 }

@@ -61,6 +61,7 @@ var Blokus = (function() {
 
   blokus.renderControls = function() {
     Render.passButton(gameID);
+    Render.hintButton(blokus.showHint, blokus.removeHints);
   };
 
   blokus.pieceCoordinates = function() {
@@ -232,14 +233,14 @@ var Blokus = (function() {
 
   blokus.initDragAndDrop = function(){
     var pieces = document.querySelectorAll('.isomers .isomer');
-    for(var i = 0; i < pieces.length; i++){
+    for (var i = 0; i < pieces.length; i++){
       pieces[i].addEventListener('dragstart', handleDragStart, false);
       pieces[i].addEventListener('drop', handleDrop, false);
       pieces[i].addEventListener('dragend', handleDragEnd, false);
     }
 
     var squares = document.querySelectorAll('.squares .square');
-    for(var i = 0; i < squares.length; i++){
+    for (var i = 0; i < squares.length; i++){
       squares[i].addEventListener('drop', handleDrop, false);
       squares[i].addEventListener('dragenter', handleDragEnter, false);
       squares[i].addEventListener('dragover', handleDragOver, false);
@@ -253,7 +254,7 @@ var Blokus = (function() {
 
     Render.clearPieceControls();
 
-    for(var i = pieceCoords.columnCount() - 1; i >= 0; i--){
+    for (var i = pieceCoords.columnCount() - 1; i >= 0; i--){
       var point = pieceCoords.column(i);
       var square = getSquare(point[0], point[1]);
 
@@ -262,6 +263,21 @@ var Blokus = (function() {
     }
 
     pieceCoords = null;
+    blokus.removeHints();
+  };
+
+  blokus.showHint = function() {
+    board.forEachFreeCorner(gameData.activeColour, function(x, y){
+      var square = getSquare(x, y);
+      square.classList.add("hint");
+    });
+  };
+
+  blokus.removeHints = function() {
+    var squares = document.querySelectorAll('.squares .square.hint');
+    for (var i = 0; i < squares.length; i++) {
+      squares[i].classList.remove("hint");
+    }
   };
 
   return blokus;

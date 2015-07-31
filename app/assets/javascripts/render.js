@@ -164,6 +164,21 @@ var Render = (function(){
     controls.appendChild(passButton);
   };
 
+  var enableHints = false;
+  render.hintButton = function(hintsOn, hintsOff) {
+    var controls = document.getElementById("controls");
+    var hintButton = render.createButton("hint");
+    hintButton.onclick = function() {
+      enableHints = !enableHints;
+      if (enableHints) {
+        hintsOn();
+      } else {
+        hintsOff();
+      }
+    }
+    controls.appendChild(hintButton);
+  };
+
   render.pieceControls = function(gameID) {
     var controls = document.getElementById("controls");
 
