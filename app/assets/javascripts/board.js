@@ -144,7 +144,6 @@ var Board = (function(){
 
     var isValid = false;
     if (isFirstTurn) {
-      // var coversABoardCorner = inBoardCorner.call(this, coordinates);
       var coversABoardCorner = this.isABoardCorner(coordinates);
       isValid = onBoard && areEmpty && coversABoardCorner;
     } else {
