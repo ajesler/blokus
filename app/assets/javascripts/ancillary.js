@@ -15,7 +15,7 @@ var Utils = (function(){
 
   if (!Array.prototype.includes) {
     Array.prototype.includes = function(element) {
-      for(var i = array.length - 1; i >= 0; i--){
+      for(var i = this.length - 1; i >= 0; i--){
       if(this[i] === element){
         return true;
       }
