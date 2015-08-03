@@ -31,35 +31,6 @@ var Utils = (function(){
     return this.push.apply(this, rest);
   };
 
-  utils.containsElement = function(array, element){
-    for(var i = array.length - 1; i >= 0; i--){
-      if(array[i] === element){
-        return true;
-      }
-    }
-    return false;
-  }
-
-  utils.removeElement = function(array, element){
-    for(var i = array.length - 1; i >= 0; i--){
-      if(array[i] === element){
-        array.remove(i);
-        break;
-      }
-    }
-  }
-
-  utils.forEachKeyValue = function(object, callback) {
-    var callbackWithContext = callback.bind(this);
-
-    for(var property in object){
-      if(object.hasOwnProperty(property)){
-        var value = object[property];
-        callbackWithContext(property, value);
-      }
-    }
-  };
-
   utils.getJSON = function(url, success, failure) {
     var self = this;
     var request = new XMLHttpRequest();
