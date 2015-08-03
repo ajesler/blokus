@@ -29,7 +29,7 @@ nav {
 
 @mixin score-wrapper($border-colour) {
   border: 3px solid $border-colour;
-  width: 129px;
+  width: 128px;
   float: left;
   margin-right: 10px;
   margin-bottom: 10px;
@@ -49,7 +49,7 @@ nav {
 }
 
 .score-wrapper-green {
-  @include score-wrapper(green)
+  @include score-wrapper(lime)
 }
 
 .score-player-name {
@@ -159,7 +159,7 @@ nav {
 }
 
 .block-green {
-  @include square-colour(green);
+  @include square-colour(lime);
 }
 
 .block-red {
