@@ -23,6 +23,10 @@ var Board = (function(){
     }
   };
 
+  Board.prototype.boardSize = function() {
+    return this.size;
+  };
+
   Board.prototype.square = function(x, y, value){
     if(typeof(value) === "undefined") {
       return this.board[y][x];
