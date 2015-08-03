@@ -20,14 +20,25 @@ class GamePresenter
       @is_first_turn = @player.turns.empty?
     end
 
-    if @finished
-      @scores = @game.players.each.with_object({}) do |player, scores|
-        score = ScorePlayer.new(player).call
-        scores[player] = score
-      end
+    @scores = @game.players.play_order.each.with_object([]) do |player, results|
+      score = ScorePlayer.new(player).call
 
+      player_index = @game.players.play_order.to_a.find_index(player)
+      colour = @game.colours[player_index]
+
+      result = {
+        :player => player,
+        :score => score,
+        :colour => colour.to_s
+      }
+
+      results << result
+    end
+    @scores.sort_by! { |result| result[:player].id }
+
+    if @finished
       # TODO what if there is a draw?
-      @winner = @scores.max_by { |player, score| score }[0].id
+      @winner = @scores.max_by { |result| result[:score] }[:player].id
     end
 
     @available_shapes = FindAvailableShapes.new(@player).call

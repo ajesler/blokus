@@ -48,6 +48,8 @@ var Blokus = (function() {
           blokus.initDragAndDrop();
         }
       }
+      
+      Render.scores(gameData.scores);
     });
   };
 
@@ -245,7 +247,6 @@ var Blokus = (function() {
       squares[i].addEventListener('dragenter', handleDragEnter, false);
       squares[i].addEventListener('dragover', handleDragOver, false);
       squares[i].addEventListener('dragleave', handleDragLeave, false);
-      
     }
   };
 

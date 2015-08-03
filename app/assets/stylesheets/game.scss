@@ -1,6 +1,5 @@
 $square-multiplier: 3;
 $square-scale: $square-multiplier * 10px;
-/*$square-scale: 30px;*/
 
 #wrapper {
   width: 960px;
@@ -15,6 +14,50 @@ header {
 
 nav {
   width:960px;
+}
+
+#scores {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#scores:after {
+  clear: both;
+  content: "";
+  display: block;
+}
+
+@mixin score-wrapper($border-colour) {
+  border: 3px solid $border-colour;
+  width: 129px;
+  float: left;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  padding: 5px;
+}
+
+.score-wrapper-blue {
+  @include score-wrapper(blue)
+}
+
+.score-wrapper-yellow {
+  @include score-wrapper(yellow)
+}
+
+.score-wrapper-red {
+  @include score-wrapper(red)
+}
+
+.score-wrapper-green {
+  @include score-wrapper(green)
+}
+
+.score-player-name {
+  
+}
+
+.score-player-score {
+  
 }
 
 #content {
@@ -34,35 +77,6 @@ nav {
 #controls {
   padding: 5px;
   height: 25px;
-}
-
-#board {
-}
-
-.squares {
-  width: $square-scale*20;
-  border: 1px solid darkgray;
-}
-
-.squares:after{
-  clear: both;
-  content: "";
-  display: block;
-}
-
-.square-row {
-  width: $square-scale*20;
-  height: $square-scale;
-}
-
-.square {
-  position: relative;
-  display: inline-block;
-	width: $square-scale;
-	height: $square-scale;
-  fill: lightgray;
-  stroke: darkgray;
-  overflow: hidden;
 }
 
 #pieces {
@@ -98,41 +112,65 @@ nav {
 .isomer {
   float: left;
   margin: 10px;
+  stroke: darkgray;
+  stroke-width: 1px;
 }
 
-.wide-stroke {
-  stroke-width: 7px;
+#board {
+}
+
+.squares {
+  width: $square-scale*20;
+  border: 1px solid darkgray;
+}
+
+.squares:after{
+  clear: both;
+  content: "";
+  display: block;
+}
+
+.square-row {
+  width: $square-scale*20;
+  height: $square-scale;
+}
+
+.square {
+  position: relative;
+  display: inline-block;
+  width: $square-scale;
+  height: $square-scale;
+  fill: lightgray;
+  stroke: darkgray;
+  stroke-width: 1px;
+  overflow: hidden;
+}
+
+@mixin square-colour($fill-colour) {
+  fill: $fill-colour;
 }
 
 .block-blue {
-	stroke: blue;
-	fill: lightblue;
+  @include square-colour(blue);
 }
 
 .block-yellow {
-	stroke: orange;
-	fill: yellow;
-}
-
-.block-red {
-	stroke: red;
-	fill: pink;
+  @include square-colour(yellow);
 }
 
 .block-green {
-	stroke: darkgreen;
-	fill: lightgreen;
+  @include square-colour(green);
+}
+
+.block-red {
+  @include square-colour(red);
 }
 
 [draggable] {
-	cursor: move;
+  cursor: move;
 }
 
-.over {
-  fill: violet;
-}
-
-.hint {
+.over, .hint {
   fill: violet;
 }
 

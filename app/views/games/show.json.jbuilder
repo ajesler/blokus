@@ -1,10 +1,11 @@
 json.finished @presenter.finished
+json.scores @presenter.scores.each do |result|
+	json.id result[:player].id
+	json.name result[:player].name
+	json.score result[:score]
+  json.colour result[:colour]
+end
 if @presenter.finished
-	json.scores @presenter.scores.each do |player, score|
-		json.id player.id
-		json.name player.name
-		json.score score
-	end
 	json.winningPlayerID @presenter.winner
 end
 json.activeColour @presenter.active_colour

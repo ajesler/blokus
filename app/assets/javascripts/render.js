@@ -4,6 +4,28 @@ var Render = (function(){
   var SVG_NS = "http://www.w3.org/2000/svg";
   var BOARD_SIZE = 20;
 
+  render.scores = function(scores) {
+    var scoresContainer = document.getElementById("scores");
+
+    scores.forEach(function(result){
+      var scoreWrapperDiv = document.createElement("div");
+      scoreWrapperDiv.setAttribute("class", "score-wrapper-"+result.colour);
+
+      var nameDiv = document.createElement("div");
+      nameDiv.setAttribute("class", "score-player-name");
+      nameDiv.innerHTML = result.name;
+
+      var scoreDiv = document.createElement("div");
+      scoreDiv.setAttribute("class", "score-player-value");
+      scoreDiv.innerHTML = result.score;
+
+      scoreWrapperDiv.appendChild(nameDiv);
+      scoreWrapperDiv.appendChild(scoreDiv);
+
+      scoresContainer.appendChild(scoreWrapperDiv);
+    });
+  }
+
   render.board = function(board){
   	var boardContainer = document.getElementById("board");
 
@@ -36,7 +58,7 @@ var Render = (function(){
     var svgDiv = document.createElement("div");
     var classString = "square";
     if(colour !== "") {
-      classString += " wide-stroke block-"+colour;
+      classString += " block-"+colour;
     }
 
     svgDiv.setAttribute("class", classString);
@@ -219,24 +241,6 @@ var Render = (function(){
     var winner = document.createElement("h3");
     winner.appendChild(document.createTextNode(winningResult.name+' was the winning player!'));
     gameOver.appendChild(winner);
-
-    var scoresTable = document.createElement("table");
-    scores
-        .sort(function(a, b){
-          return b.score - a.score;
-        })
-        .forEach(function(result){
-          var tr = document.createElement("tr");
-          var tdName = document.createElement("td");
-          tdName.innerHTML = result.name;
-          var tdScore = document.createElement("td");
-          tdScore.innerHTML = result.score;
-          tr.appendChild(tdName);
-          tr.appendChild(tdScore);
-          scoresTable.appendChild(tr);
-        });
-
-    gameOver.appendChild(scoresTable);
   }
 
   return render;
