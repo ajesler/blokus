@@ -16,6 +16,9 @@
 //= require_tree .
 //= require websocket_rails/main
 
-window.onload = function(){
-  Blokus.init();
-};
+// TODO fix the jasmine test hack
+if (!window.jasmine) {
+  window.onload = function(){
+    Blokus.init();
+  };
+}
