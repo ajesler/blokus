@@ -182,7 +182,7 @@ var Blokus = (function() {
       var point = pieceCoords.column(i);
       var square = getSquare(point[0], point[1]);
 
-      square.classList.add("wide-stroke", "block-"+gameData.activeColour);
+      square.classList.add("block-"+gameData.activeColour);
       board.square(point[0], point[1], gameData.activeColour);
     }
   }
