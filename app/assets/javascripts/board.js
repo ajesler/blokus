@@ -1,22 +1,22 @@
-var Board = (function(){
+var Board = (function() {
   var EMPTY = "";
 
-  var Board = function(size){
-    if(size instanceof Array){
+  var Board = function(size) {
+    if (size instanceof Array) {
       var boardArray = size;
       this.size = boardArray.length;
       this.board = boardArray;
     } else {
-      if(typeof(size) !== "undefined"){
+      if (typeof(size) !== "undefined") {
         this.size = size;
       } else {
         this.size = 20;
       }
 
       this.board = new Array(this.size);
-      for(var y = 0; y < this.size; y++){
+      for(var y = 0; y < this.size; y++) {
         this.board[y] = new Array(this.size);
-        for(var x = 0; x < this.size; x++){
+        for(var x = 0; x < this.size; x++) {
           this.board[y][x] = EMPTY;
         }
       }
@@ -27,8 +27,8 @@ var Board = (function(){
     return this.size;
   };
 
-  Board.prototype.square = function(x, y, value){
-    if(typeof(value) === "undefined") {
+  Board.prototype.square = function(x, y, value) {
+    if (typeof(value) === "undefined") {
       return this.board[y][x];
     } else {
       this.board[y][x] = value;
@@ -38,10 +38,10 @@ var Board = (function(){
 
   Board.prototype.allCoordinatesValid = function(coordinates) {
     return coordinates.columns()
-      .map(function(point){
+      .map(function(point) {
         return this.isOnBoard(point[0], point[1])
       }, this)
-      .every(function(isValid){
+      .every(function(isValid) {
         return isValid;
       });
   };
@@ -56,42 +56,42 @@ var Board = (function(){
 
   Board.prototype.offsetSquares = function(x, y, offsetPoints) {
     return offsetPoints
-      .map(function(point){
+      .map(function(point) {
         return [point[0]+x, point[1]+y];
       }, this)
-      .filter(function(point){
+      .filter(function(point) {
         return this.isOnBoard(point[0], point[1]);
       }, this);
   };
 
   Board.prototype.hasAdjacentCornerOfColour = function(coordinates, colour) {
     return coordinates.columns()
-      .map(function(column){
+      .map(function(column) {
         return this.adjacentCorners(column[0], column[1])
-          .map(function(point){
+          .map(function(point) {
             return this.square(point[0], point[1]) === colour;
           }, this)
-          .some(function(hasAdjacentCornerOfColour){
+          .some(function(hasAdjacentCornerOfColour) {
             return hasAdjacentCornerOfColour;
           });
       }, this)
-      .some(function(isAdjacent){
+      .some(function(isAdjacent) {
         return isAdjacent;
       });
   };
 
   Board.prototype.doesNotTouchSameColourEdge = function(coordinates, colour) {
     return coordinates.columns()
-      .map(function(column){
+      .map(function(column) {
         return this.adjacentTo(column[0], column[1])
-          .map(function(point){
+          .map(function(point) {
             return this.square(point[0], point[1]) === colour;
           }, this)
-          .every(function(hasAdjacent){
+          .every(function(hasAdjacent) {
             return !hasAdjacent;
           });
       }, this)
-      .every(function(isNotAdjacent){
+      .every(function(isNotAdjacent) {
         return isNotAdjacent;
       });
   };
@@ -106,18 +106,18 @@ var Board = (function(){
     ];
 
     return coordinates.columns()
-      .map(function(column){
-        return corners.some(function(point){
+      .map(function(column) {
+        return corners.some(function(point) {
           return column[0] === point[0] && column[1] === point[1];
         })
       }, this)
-      .some(function(coversACorner){
+      .some(function(coversACorner) {
         return coversACorner;
       });
   };
 
   Board.prototype.isOnBoard = function(x, y) {
-    if(typeof(y) === "undefined" && x instanceof Array && x.length == 2){
+    if (typeof(y) === "undefined" && x instanceof Array && x.length == 2) {
       y = x[1];
       x = x[0];
     }
@@ -126,10 +126,10 @@ var Board = (function(){
       throw "undefined board size in board.isOnBoard()";
     }
 
-    if(x > this.size - 1 || y > this.size - 1){
+    if (x > this.size - 1 || y > this.size - 1) {
       return false;
     }
-    if(x < 0 || y < 0){
+    if (x < 0 || y < 0) {
       return false;
     }
     return true;
@@ -163,15 +163,15 @@ var Board = (function(){
     var boundCallback = callback.bind(this);
 
     var offset = this.size - 1;
-    this.board.clone().reverse().forEach(function(row, index){
+    this.board.clone().reverse().forEach(function(row, index) {
       boundCallback(row, offset - index);
     });
   };
 
   Board.prototype.forEachSquare = function(callback) {
     var boundCallback = callback.bind(this);
-    this.board.forEach(function(row, y){
-      row.forEach(function(square_contents, x){
+    this.board.forEach(function(row, y) {
+      row.forEach(function(square_contents, x) {
         boundCallback(x, y, square_contents);
       });
     });
@@ -180,8 +180,8 @@ var Board = (function(){
   Board.prototype.allSquaresOfColour = function(colour) {
     var coords = [];
 
-    this.forEachSquare(function(x, y, contents){
-      if(contents === colour) {
+    this.forEachSquare(function(x, y, contents) {
+      if (contents === colour) {
         coords.push([x, y]);
       }
     });
@@ -191,11 +191,11 @@ var Board = (function(){
 
   Board.prototype.isAdjacentToColour = function(x, y, colour) {
     var adjacent = this.adjacentTo(x, y)
-      .map(function(point){
+      .map(function(point) {
         var isAdjacent = this.square(point[0], point[1]) === colour;
         return isAdjacent;
       }, this)
-      .some(function(isAdjacent){
+      .some(function(isAdjacent) {
         return isAdjacent;
       }, this);
 
@@ -206,7 +206,7 @@ var Board = (function(){
     return this.square(x, y) === EMPTY;
   };
 
-  Board.prototype.forEachFreeCorner = function(colour, callback) {
+  Board.prototype.forEachOpenCornerOfColour = function(colour, callback) {
     var isEmptySquare = function isEmptySquare(point) {
       return this.isEmpty(point[0], point[1]);
     }.bind(this);
@@ -220,21 +220,21 @@ var Board = (function(){
       this.adjacentCorners(colourPoint[0], colourPoint[1])
           .filter(isEmptySquare)
           .filter(isNotAdjacent)
-          .forEach(function(point){
-            if(!possibleSquares.includes(point)){
+          .forEach(function(point) {
+            if (!possibleSquares.includes(point)) {
               possibleSquares.push(point);
             }
           }, this);
     }, this);
 
     possibleSquares
-      .forEach(function(point){
+      .forEach(function(point) {
         callback(point[0], point[1]);
       }, this);
   };
 
   Board.prototype.coordinatesAreAllEmpty = function(coordinates) {
-    if(coordinates instanceof Array){
+    if (coordinates instanceof Array) {
       coordinates = new Matrix(coordinates);
     }
 
@@ -244,7 +244,7 @@ var Board = (function(){
 
     return coordinates.columns()
       .map(isEmptySquare)
-      .every(function(isEmpty){
+      .every(function(isEmpty) {
         return isEmpty;
       });
   };

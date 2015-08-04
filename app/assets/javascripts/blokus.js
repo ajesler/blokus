@@ -162,23 +162,23 @@ var Blokus = (function() {
     }
   }
 
-  var unhighlightDropSquares = function(){
+  var unhighlightDropSquares = function() {
     var over = document.querySelectorAll(".square[class*=over]");
     var invalid = document.querySelectorAll(".square[class*=invalid-placement]");
 
-    for(var i = 0; i < over.length; i++){
+    for (var i = 0; i < over.length; i++) {
       over[i].classList.remove("over");
     }
 
-    for(var i = 0; i < invalid.length; i++){
+    for (var i = 0; i < invalid.length; i++) {
       invalid[i].classList.remove("invalid-placement");
     }
   }
 
-  var placePiece = function(){
+  var placePiece = function() {
     unhighlightDropSquares();
 
-    for(var i = pieceCoords.columnCount() - 1; i >= 0; i--){
+    for (var i = pieceCoords.columnCount() - 1; i >= 0; i--) {
       var point = pieceCoords.column(i);
       var square = getSquare(point[0], point[1]);
 
@@ -189,7 +189,7 @@ var Blokus = (function() {
 
   var disableIsomerDragging = function(){
     var isomers = document.querySelectorAll(".isomers .isomer");
-    for(var i = 0; i < isomers.length; i++){
+    for (var i = 0; i < isomers.length; i++) {
       isomers[i].setAttribute("draggable", "false");
       isomers[i].style.cursor = "no-drop";
     }
@@ -197,7 +197,7 @@ var Blokus = (function() {
 
   var enableIsomerDragging = function(){
     var isomers = document.querySelectorAll(".isomers .isomer");
-    for(var i = 0; i < isomers.length; i++){
+    for (var i = 0; i < isomers.length; i++) {
       isomers[i].setAttribute("draggable", "true");
       isomers[i].style.cursor = "move";
     }
@@ -216,7 +216,7 @@ var Blokus = (function() {
     if (dragSourceElement != this) {
       var coordinates = getPieceCoverage(e);
       
-      if(board.isValidMove(coordinates, gameData.activeColour, gameData.isFirstTurn)){
+      if (board.isValidMove(coordinates, gameData.activeColour, gameData.isFirstTurn)) {
         placePiece(coordinates);
         disableIsomerDragging();
 
@@ -235,14 +235,14 @@ var Blokus = (function() {
 
   blokus.initDragAndDrop = function(){
     var pieces = document.querySelectorAll('.isomers .isomer');
-    for (var i = 0; i < pieces.length; i++){
+    for (var i = 0; i < pieces.length; i++) {
       pieces[i].addEventListener('dragstart', handleDragStart, false);
       pieces[i].addEventListener('drop', handleDrop, false);
       pieces[i].addEventListener('dragend', handleDragEnd, false);
     }
 
     var squares = document.querySelectorAll('.squares .square');
-    for (var i = 0; i < squares.length; i++){
+    for (var i = 0; i < squares.length; i++) {
       squares[i].addEventListener('drop', handleDrop, false);
       squares[i].addEventListener('dragenter', handleDragEnter, false);
       squares[i].addEventListener('dragover', handleDragOver, false);
@@ -250,12 +250,12 @@ var Blokus = (function() {
     }
   };
 
-  blokus.revertMove = function(){
+  blokus.revertMove = function() {
     enableIsomerDragging();
 
     Render.clearPieceControls();
 
-    for (var i = pieceCoords.columnCount() - 1; i >= 0; i--){
+    for (var i = pieceCoords.columnCount() - 1; i >= 0; i--) {
       var point = pieceCoords.column(i);
       var square = getSquare(point[0], point[1]);
 
@@ -268,7 +268,7 @@ var Blokus = (function() {
   };
 
   blokus.showHint = function() {
-    board.forEachFreeCorner(gameData.activeColour, function(x, y){
+    board.forEachOpenCornerOfColour(gameData.activeColour, function(x, y) {
       var square = getSquare(x, y);
       square.classList.add("hint");
     });
