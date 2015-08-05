@@ -106,33 +106,20 @@ describe("Board", function(){
 
   describe("#forEachOpenCornerOfColour", function(){
     it("executes the callback", function(){
-      var blueCount = 0;
-      board.forEachOpenCornerOfColour("blue", function(){
-        blueCount += 1;
+      [
+        ["blue", 4],
+        ["yellow", 0],
+        ["red", 3],
+        ["green", 1]
+      ].forEach(function(expectedResult){
+        var colour = expectedResult[0];
+        var expectedCount = expectedResult[1];
+        var count = 0;
+        board.forEachOpenCornerOfColour(colour, function(){
+          count += 1;
+        });
+        expect(count).toEqual(expectedCount);
       });
-
-      expect(blueCount).toEqual(4);
-
-      var greenCount = 0;
-      board.forEachOpenCornerOfColour("green", function(){
-        greenCount += 1;
-      });
-
-      expect(greenCount).toEqual(1);
-
-      var yellowCount = 0;
-      board.forEachOpenCornerOfColour("yellow", function(){
-        yellowCount += 1;
-      });
-
-      expect(yellowCount).toEqual(0);
-
-      var redCount = 0;
-      board.forEachOpenCornerOfColour("red", function(){
-        redCount += 1;
-      });
-
-      expect(redCount).toEqual(3);
     });
   });
 
