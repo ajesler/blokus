@@ -239,7 +239,7 @@ var Render = (function(){
     });
 
     var winner = document.createElement("h3");
-    winner.appendChild(document.createTextNode(winningResult.name+' was the winning player!'));
+    winner.appendChild(document.createTextNode(winningResult.name+' was the winning player with '+winningResult.score+' points!'));
     gameOver.appendChild(winner);
   }
 
